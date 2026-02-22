@@ -1,0 +1,23 @@
+# Production Environment Configuration
+# PRODUCTION - READ-ONLY, NO MODIFICATION
+# Non-secret configuration - Safe to commit to git
+# Secrets (URLs, API keys) stored in .env.production (gitignored)
+# Use secured secret management in CI/CD (AWS Secrets, HashiCorp Vault, etc.)
+
+environment: production
+debug: false
+read_only: true
+
+# API Configuration
+api:
+  timeout: 10             # seconds — used by RequestsLibrary
+  verify_ssl: true
+  max_retries: 2
+  retry_delay: 3
+
+# Timeouts
+timeouts:
+  connect_timeout: 5
+  read_timeout: 10
+  write_timeout: 5
+  browser_navigation_timeout: 90

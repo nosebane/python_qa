@@ -1,0 +1,255 @@
+name: 📱 Mobile Tests (Device Farm)
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'automation-framework/tests/mobile/**'
+      - 'automation-framework/resources/keywords/mobile/**'
+      - 'automation-framework/resources/page_objects/mobile/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'automation-framework/tests/mobile/**'
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Mobile platform'
+        required: true
+        default: 'android'
+        type: choice
+        options: [android, ios, both]
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'production'
+        type: choice
+        options: [dev, staging, production]
+      device_name:
+        description: 'Specific device (leave empty for auto-detect)'
+        required: false
+        default: ''
+      test_suite:
+        description: 'Test to run (relative path under tests/mobile/)'
+        required: false
+        default: 'search_and_validate_eth.robot'
+
+env:
+  PYTHON_VERSION: '3.11'
+  WORKING_DIR: automation-framework
+  # Appium server pada self-hosted runner
+  APPIUM_SERVER: http://127.0.0.1:4723
+
+jobs:
+  # ─────────────────────────────────────────────
+  # PRE-CHECK: Pastikan device tersedia
+  # ─────────────────────────────────────────────
+  device-check:
+    name: 🔍 Device Farm Health Check
+    # Runs on self-hosted Mac runner dengan device terhubung
+    runs-on: [self-hosted, macOS, device-farm]
+
+    outputs:
+      android_available: ${{ steps.check-android.outputs.available }}
+      android_devices: ${{ steps.check-android.outputs.devices }}
+      ios_available: ${{ steps.check-ios.outputs.available }}
+      ios_devices: ${{ steps.check-ios.outputs.devices }}
+      appium_running: ${{ steps.check-appium.outputs.running }}
+
+    steps:
+      - name: Check Appium server
+        id: check-appium
+        run: |
+          if curl -s http://127.0.0.1:4723/status | grep -q '"ready":true'; then
+            echo "running=true" >> $GITHUB_OUTPUT
+            echo "✅ Appium is running"
+          else
+            echo "running=false" >> $GITHUB_OUTPUT
+            echo "❌ Appium is NOT running — starting..."
+            nohup appium --port 4723 &>/tmp/appium.log &
+            sleep 5
+          fi
+
+      - name: Check Android devices
+        id: check-android
+        if: ${{ github.event.inputs.platform != 'ios' }}
+        run: |
+          DEVICES=$(adb devices | grep -v "List" | grep "device$" | awk '{print $1}' | tr '\n' ',')
+          if [ -n "$DEVICES" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+            echo "devices=$DEVICES" >> $GITHUB_OUTPUT
+            echo "✅ Android devices: $DEVICES"
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "devices=" >> $GITHUB_OUTPUT
+            echo "❌ No Android devices connected"
+          fi
+
+      - name: Check iOS devices
+        id: check-ios
+        if: ${{ github.event.inputs.platform != 'android' }}
+        run: |
+          DEVICES=$(xcrun xctrace list devices 2>/dev/null | grep -v "Simulator" | grep -v "==" | awk -F'(' '{print $2}' | awk -F')' '{print $1}' | tr '\n' ',' || echo "")
+          if [ -n "$DEVICES" ]; then
+            echo "available=true" >> $GITHUB_OUTPUT
+            echo "devices=$DEVICES" >> $GITHUB_OUTPUT
+            echo "✅ iOS devices: $DEVICES"
+          else
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "devices=" >> $GITHUB_OUTPUT
+            echo "❌ No iOS devices connected"
+          fi
+
+  # ─────────────────────────────────────────────
+  # ANDROID TESTS — Local Device Farm
+  # ─────────────────────────────────────────────
+  mobile-android:
+    name: 🤖 Android — ${{ github.event.inputs.environment || 'production' }}
+    runs-on: [self-hosted, macOS, device-farm]
+    needs: device-check
+    if: |
+      needs.device-check.outputs.android_available == 'true' &&
+      github.event.inputs.platform != 'ios'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Load env file
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          ENV="${{ github.event.inputs.environment || 'production' }}"
+          if [ -f ".env.mobile.${ENV}" ]; then
+            export $(grep -v '^#' .env.mobile.${ENV} | xargs)
+            echo "Loaded .env.mobile.${ENV}"
+          fi
+
+      - name: Resolve device
+        id: device
+        run: |
+          DEVICE="${{ github.event.inputs.device_name }}"
+          if [ -z "$DEVICE" ]; then
+            DEVICE=$(adb devices | grep "device$" | head -1 | awk '{print $1}')
+          fi
+          echo "name=$DEVICE" >> $GITHUB_OUTPUT
+          echo "Using device: $DEVICE"
+
+      - name: Run Android Tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          APPIUM_SERVER: ${{ env.APPIUM_SERVER }}
+          ANDROID_DEVICE_NAME: ${{ steps.device.outputs.name }}
+          ANDROID_APP_PACKAGE: id.co.bitcoin
+          ANDROID_APP_ACTIVITY: .ui.main.SplashScreenActivity
+        run: |
+          SUITE="${{ github.event.inputs.test_suite || 'search_and_validate_eth.robot' }}"
+          robot \
+            --outputdir results/mobile/android \
+            --log log.html \
+            --report report.html \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'production' }} \
+            --variable PLATFORM:Android \
+            --variable DEVICE_NAME:${ANDROID_DEVICE_NAME} \
+            --loglevel INFO \
+            --timestampoutputs \
+            tests/mobile/${SUITE}
+
+      - name: Upload Android Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-android-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/mobile/android/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # iOS TESTS — Local Device Farm
+  # ─────────────────────────────────────────────
+  mobile-ios:
+    name: 🍎 iOS — ${{ github.event.inputs.environment || 'production' }}
+    runs-on: [self-hosted, macOS, device-farm]
+    needs: device-check
+    if: |
+      needs.device-check.outputs.ios_available == 'true' &&
+      github.event.inputs.platform != 'android'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Resolve iOS device UDID
+        id: ios-device
+        run: |
+          UDID="${{ github.event.inputs.device_name }}"
+          if [ -z "$UDID" ]; then
+            UDID=$(xcrun xctrace list devices 2>/dev/null | grep -v Simulator | grep -v "==" | head -1 | grep -Eo '\(([0-9A-F-]+)\)' | tr -d '()')
+          fi
+          echo "udid=$UDID" >> $GITHUB_OUTPUT
+          echo "Using iOS device UDID: $UDID"
+
+      - name: Run iOS Tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          APPIUM_SERVER: ${{ env.APPIUM_SERVER }}
+          IOS_DEVICE_UDID: ${{ steps.ios-device.outputs.udid }}
+        run: |
+          SUITE="${{ github.event.inputs.test_suite || 'search_and_validate_eth.robot' }}"
+          robot \
+            --outputdir results/mobile/ios \
+            --log log.html \
+            --report report.html \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'production' }} \
+            --variable PLATFORM:iOS \
+            --variable DEVICE_UDID:${IOS_DEVICE_UDID} \
+            --loglevel INFO \
+            --timestampoutputs \
+            tests/mobile/${SUITE}
+
+      - name: Upload iOS Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobile-ios-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/mobile/ios/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # NOTIFY if no devices
+  # ─────────────────────────────────────────────
+  no-device-warning:
+    name: ⚠️ No Devices Available
+    runs-on: ubuntu-latest
+    needs: device-check
+    if: |
+      needs.device-check.outputs.android_available != 'true' &&
+      needs.device-check.outputs.ios_available != 'true'
+    steps:
+      - name: Warn no devices
+        run: |
+          echo "::warning::No mobile devices connected to device farm. Mobile tests skipped."
+          echo "Please connect a device and retry the workflow."
+          exit 1

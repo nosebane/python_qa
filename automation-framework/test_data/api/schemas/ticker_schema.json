@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indodax Ticker Response Schema",
+  "type": "object",
+  "properties": {
+    "ticker": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "type": ["number", "string"],
+          "description": "Highest price in the last 24 hours"
+        },
+        "low": {
+          "type": ["number", "string"],
+          "description": "Lowest price in the last 24 hours"
+        },
+        "vol_btc": {
+          "type": ["number", "string"],
+          "description": "Volume in the last 24 hours"
+        },
+        "vol_idr": {
+          "type": ["number", "string"],
+          "description": "Volume in IDR in the last 24 hours"
+        },
+        "last": {
+          "type": ["number", "string"],
+          "description": "Last transaction price"
+        },
+        "buy": {
+          "type": ["number", "string"],
+          "description": "Highest buy price"
+        },
+        "sell": {
+          "type": ["number", "string"],
+          "description": "Lowest sell price"
+        },
+        "server_time": {
+          "type": "integer",
+          "description": "Server timestamp in unix time"
+        }
+      },
+      "required": ["high", "low", "last", "buy", "sell"],
+      "additionalProperties": true
+    }
+  },
+  "required": ["ticker"],
+  "additionalProperties": true
+}

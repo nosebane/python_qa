@@ -1,0 +1,74 @@
+{
+  "test_cases": [
+    {
+      "id": "bitcoin_ticker",
+      "name": "Get Bitcoin Ticker",
+      "pair_id": "btc_idr",
+      "description": "Verify Bitcoin ticker endpoint returns valid data"
+    },
+    {
+      "id": "ethereum_ticker",
+      "name": "Get Ethereum Ticker",
+      "pair_id": "eth_idr",
+      "description": "Verify Ethereum ticker endpoint"
+    },
+    {
+      "id": "ripple_ticker",
+      "name": "Get Ripple Ticker",
+      "pair_id": "xrp_idr",
+      "description": "Verify Ripple ticker endpoint"
+    },
+    {
+      "id": "all_tickers",
+      "name": "Get All Tickers",
+      "description": "Verify getting all available tickers"
+    }
+  ],
+  "ticker_test_data": {
+    "bitcoin": {
+      "pair_id": "btc_idr",
+      "expected_min_pairs": 10,
+      "required_fields": ["buy", "sell", "high", "low", "last"]
+    },
+    "ethereum": {
+      "pair_id": "eth_idr",
+      "required_fields": ["buy", "sell", "high", "low", "last"]
+    },
+    "ripple": {
+      "pair_id": "xrp_idr",
+      "required_fields": ["buy", "sell", "high", "low", "last"]
+    }
+  },
+  "depth_test_data": {
+    "btc_depth": {
+      "pair_id": "btc_idr",
+      "required_fields": ["buy", "sell"],
+      "description": "Order book depth for BTC"
+    },
+    "eth_depth": {
+      "pair_id": "eth_idr",
+      "required_fields": ["buy", "sell"],
+      "description": "Order book depth for ETH"
+    }
+  },
+  "trades_test_data": {
+    "btc_trades": {
+      "pair_id": "btc_idr",
+      "required_fields": ["trade_id", "type", "price", "amount", "date"],
+      "description": "Recent trades for BTC"
+    },
+    "eth_trades": {
+      "pair_id": "eth_idr",
+      "required_fields": ["trade_id", "type", "price", "amount", "date"],
+      "description": "Recent trades for ETH"
+    }
+  },
+  "negative_cases": {
+    "invalid_pair_ticker": {
+      "pair_id": "invalid_pair_xyz",
+      "expected_response": "error",
+      "expected_error": "invalid_pair",
+      "description": "Verify invalid pair returns error response"
+    }
+  }
+}

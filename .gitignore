@@ -1,0 +1,108 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Robot Framework
+results/
+reports/
+logs/
+output.xml
+log.html
+report.html
+
+# Test artifacts
+screenshots/
+*.png
+*.jpg
+*.jpeg
+
+# Environment — NEVER commit real credentials
+.env
+.env.local
+.env.dev
+.env.staging
+.env.production
+.env.mobile.dev
+.env.mobile.staging
+.env.mobile.production
+.env.mobile.*
+credentials.yaml
+secrets/
+
+# Allow template files (safe to commit — no real values)
+!.env.example
+!automation-framework/.env.example
+!automation-framework/.env.mobile.example
+
+# Python virtual environment
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Dependency directories
+node_modules/
+npm-debug.log
+
+# CI/CD
+.github/workflows/temp/
+
+# Config
+config/environments/production.yaml
+
+# Logs
+*.log
+
+# Mobile app builds
+*.apk
+*.ipa
+*.app/
+
+# Browser downloads
+browser_downloads/
+
+# Device artifacts
+device_logs/
+device_screenshots/

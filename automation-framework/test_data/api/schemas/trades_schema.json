@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indodax Trades Response Schema",
+  "oneOf": [
+    {
+      "type": "array",
+      "description": "Array of recent trades",
+      "items": {
+        "type": "object",
+        "properties": {
+          "trade_id": {
+            "type": ["string", "integer"],
+            "description": "Unique trade identifier"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["buy", "sell"],
+            "description": "Trade type"
+          },
+          "price": {
+            "type": ["string", "number"],
+            "description": "Trade price"
+          },
+          "amount": {
+            "type": ["string", "number"],
+            "description": "Trade amount"
+          },
+          "date": {
+            "type": ["string", "integer"],
+            "description": "Trade timestamp in unix time"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "error_description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

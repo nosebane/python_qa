@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indodax Open Orders Response Schema",
+  "type": "object",
+  "properties": {
+    "return": {
+      "type": "object",
+      "description": "Dictionary of open orders keyed by order_id",
+      "patternProperties": {
+        ".*": {
+          "type": "object",
+          "properties": {
+            "order_id": {
+              "type": ["string", "integer"],
+              "description": "Order ID"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["buy", "sell"],
+              "description": "Order type"
+            },
+            "pair": {
+              "type": "string",
+              "description": "Trading pair"
+            },
+            "price": {
+              "type": "number",
+              "description": "Order price"
+            },
+            "amount": {
+              "type": "number",
+              "description": "Order amount"
+            },
+            "status": {
+              "type": "string",
+              "description": "Order status"
+            }
+          },
+          "required": ["order_id", "type", "pair", "price", "amount"],
+          "additionalProperties": true
+        }
+      }
+    },
+    "success": {
+      "type": "integer",
+      "enum": [1],
+      "description": "Success indicator"
+    },
+    "server_time": {
+      "type": "integer",
+      "description": "Server timestamp"
+    }
+  },
+  "required": ["return", "success"],
+  "additionalProperties": false
+}

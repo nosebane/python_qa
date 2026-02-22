@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indodax Error Response Schema",
+  "type": "object",
+  "properties": {
+    "error": {
+      "type": "string",
+      "description": "Error message or code"
+    },
+    "error_description": {
+      "type": "string",
+      "description": "Error description"
+    }
+  },
+  "required": ["error"],
+  "additionalProperties": true
+}

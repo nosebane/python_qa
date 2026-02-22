@@ -1,0 +1,23 @@
+# Mobile Staging Environment Configuration
+# Non-secret configuration - Safe to commit to git
+# Device secrets stored in .env.mobile.staging (gitignored)
+
+environment: mobile_staging
+debug: false
+
+# Appium Configuration
+appium:
+  new_command_timeout: 90    # seconds
+
+# Timeouts (milliseconds where applicable, seconds otherwise)
+timeouts:
+  app_wait_timeout: 15000    # ms — wait for app launch
+  implicit_wait: 10          # seconds
+  explicit_wait: 30          # seconds
+
+# Capabilities (non-secret device-agnostic defaults)
+capabilities:
+  no_reset: false            # staging: fresh state per run
+  disable_window_animation: true
+  auto_grant_permissions: true
+  reset_keyboard: true

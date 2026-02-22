@@ -1,0 +1,102 @@
+name: 🌍 Web Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'automation-framework/tests/web/**'
+      - 'automation-framework/resources/keywords/web/**'
+      - 'automation-framework/resources/page_objects/web/**'
+      - 'automation-framework/test_data/web/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'automation-framework/tests/web/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [dev, staging, production]
+      browser:
+        description: 'Browser to use'
+        required: false
+        default: 'chromium'
+        type: choice
+        options: [chromium, firefox, webkit]
+      headless:
+        description: 'Run headless'
+        required: false
+        default: 'true'
+        type: boolean
+
+env:
+  PYTHON_VERSION: '3.11'
+  WORKING_DIR: automation-framework
+
+jobs:
+  web-tests:
+    name: 🖥️ Web — ${{ github.event.inputs.browser || 'chromium' }} / ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.browser)) || fromJSON('["chromium"]') }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browsers
+        working-directory: ${{ env.WORKING_DIR }}
+        run: |
+          rfbrowser init ${{ matrix.browser }}
+
+      - name: Run Web Tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          WEB_BASE_URL: ${{ secrets.WEB_BASE_URL || 'https://indodax.com' }}
+          HEADLESS: ${{ github.event.inputs.headless || 'true' }}
+        run: |
+          robot \
+            --outputdir results/web \
+            --log log.html \
+            --report report.html \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'staging' }} \
+            --variable BROWSER:${{ matrix.browser }} \
+            --variable HEADLESS:${{ github.event.inputs.headless || 'true' }} \
+            --variable WEB_BASE_URL:${WEB_BASE_URL} \
+            --loglevel INFO \
+            --timestampoutputs \
+            tests/web/
+
+      - name: Upload Web Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-results-${{ matrix.browser }}-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/web/
+          retention-days: 30
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-screenshots-${{ matrix.browser }}-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/browser/screenshots/
+          retention-days: 7

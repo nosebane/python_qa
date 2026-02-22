@@ -1,0 +1,20 @@
+# Staging Environment Configuration
+# Non-secret configuration - Safe to commit to git
+# Secrets (URLs, API keys) stored in .env.staging (gitignored)
+
+environment: staging
+debug: false
+
+# API Configuration
+api:
+  timeout: 8              # seconds — used by RequestsLibrary
+  verify_ssl: true
+  max_retries: 3
+  retry_delay: 2
+
+# Timeouts
+timeouts:
+  connect_timeout: 5
+  read_timeout: 8
+  write_timeout: 5
+  browser_navigation_timeout: 90

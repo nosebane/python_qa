@@ -1,0 +1,292 @@
+name: 🚀 Full Test Suite
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Nightly full suite run: setiap hari jam 02:00 WIB (19:00 UTC)
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [dev, staging, production]
+      run_api:
+        description: 'Run API tests?'
+        required: true
+        default: 'true'
+        type: boolean
+      run_web:
+        description: 'Run Web tests?'
+        required: true
+        default: 'true'
+        type: boolean
+      run_mobile:
+        description: 'Run Mobile tests?'
+        required: true
+        default: 'true'
+        type: boolean
+      mobile_platform:
+        description: 'Mobile platform'
+        required: true
+        default: 'android'
+        type: choice
+        options: [android, ios, both]
+
+env:
+  PYTHON_VERSION: '3.11'
+  WORKING_DIR: automation-framework
+
+# Hentikan run lama jika ada push baru ke branch yang sama
+concurrency:
+  group: full-suite-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─────────────────────────────────────────────
+  # API TESTS — Ubuntu VM
+  # ─────────────────────────────────────────────
+  api-public:
+    name: 🔌 API Public — ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_api != 'false' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Run Public API tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+        run: |
+          robot \
+            --outputdir results/api/public \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'staging' }} \
+            --timestampoutputs \
+            tests/api/indodax_public_api.robot
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-public-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/api/public/
+          retention-days: 30
+
+  api-private:
+    name: 🔐 API Private — ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_api != 'false' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Run Private API tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          PRIVATE_API_BASE_URL: ${{ secrets.PRIVATE_API_BASE_URL }}
+          INDODAX_API_KEY: ${{ secrets.INDODAX_API_KEY }}
+          INDODAX_API_SECRET: ${{ secrets.INDODAX_API_SECRET }}
+        run: |
+          robot \
+            --outputdir results/api/private \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'staging' }} \
+            --timestampoutputs \
+            tests/api/indodax_private_api.robot
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-private-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/api/private/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # WEB TESTS — Ubuntu VM (Playwright)
+  # ─────────────────────────────────────────────
+  web-tests:
+    name: 🌐 Web (${{ matrix.browser }}) — ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_web != 'false' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Install Playwright browser — ${{ matrix.browser }}
+        working-directory: ${{ env.WORKING_DIR }}
+        run: rfbrowser init ${{ matrix.browser }}
+
+      - name: Run Web tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          WEB_BASE_URL: ${{ secrets.WEB_BASE_URL }}
+        run: |
+          robot \
+            --outputdir results/web/${{ matrix.browser }} \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'staging' }} \
+            --variable BROWSER:${{ matrix.browser }} \
+            --variable HEADLESS:true \
+            --timestampoutputs \
+            tests/web/
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-${{ matrix.browser }}-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/web/${{ matrix.browser }}/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # MOBILE TESTS — Self-hosted Mac Device Farm
+  # ─────────────────────────────────────────────
+  mobile-tests:
+    name: 📱 Mobile (${{ github.event.inputs.mobile_platform || 'android' }}) — Device Farm
+    runs-on: [self-hosted, macOS, device-farm]
+    if: ${{ github.event.inputs.run_mobile != 'false' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Verify Appium
+        run: |
+          if ! curl -s http://127.0.0.1:4723/status | grep -q '"ready":true'; then
+            nohup appium --port 4723 &>/tmp/appium.log &
+            sleep 5
+          fi
+          echo "✅ Appium ready"
+
+      - name: Resolve Android device
+        id: android-device
+        if: ${{ github.event.inputs.mobile_platform != 'ios' }}
+        run: |
+          DEVICE=$(adb devices | grep "device$" | head -1 | awk '{print $1}')
+          echo "name=$DEVICE" >> $GITHUB_OUTPUT
+
+      - name: Run Mobile tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          APPIUM_SERVER: http://127.0.0.1:4723
+          ANDROID_DEVICE_NAME: ${{ steps.android-device.outputs.name }}
+        run: |
+          robot \
+            --outputdir results/mobile \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'production' }} \
+            --variable PLATFORM:Android \
+            --variable DEVICE_NAME:${ANDROID_DEVICE_NAME} \
+            --timestampoutputs \
+            tests/mobile/search_and_validate_eth.robot
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/mobile/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # MERGE REPORTS — Setelah semua selesai
+  # ─────────────────────────────────────────────
+  merge-reports:
+    name: 📊 Merge & Publish Reports
+    runs-on: ubuntu-latest
+    needs: [api-public, api-private, web-tests, mobile-tests]
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Robot Framework
+        run: pip install robotframework
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results/
+
+      - name: Merge XML outputs with rebot
+        run: |
+          mkdir -p merged-report
+          find all-results -name "output*.xml" -exec echo {} \; > xml-list.txt
+          cat xml-list.txt
+          rebot \
+            --outputdir merged-report \
+            --output output.xml \
+            --log log.html \
+            --report report.html \
+            --name "Indodax Full Suite — ${{ github.event.inputs.environment || 'staging' }}" \
+            $(cat xml-list.txt | tr '\n' ' ')
+
+      - name: Upload merged report
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-suite-report-${{ github.run_id }}
+          path: merged-report/
+          retention-days: 90
+
+      - name: Summary — Test Results
+        if: always()
+        run: |
+          echo "## 📊 Full Suite Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| API Public  | ${{ needs.api-public.result }}  |" >> $GITHUB_STEP_SUMMARY
+          echo "| API Private | ${{ needs.api-private.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Web Tests   | ${{ needs.web-tests.result }}   |" >> $GITHUB_STEP_SUMMARY
+          echo "| Mobile Tests| ${{ needs.mobile-tests.result }}|" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📎 [Full HTML report in artifacts above]" >> $GITHUB_STEP_SUMMARY

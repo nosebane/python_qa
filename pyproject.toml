@@ -1,0 +1,143 @@
+[build-system]
+# Minimal build system for testing framework
+# Not meant to be installed as a package, just for dependency management
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "indodax-automation-framework"
+version = "1.0.0"
+description = "Comprehensive automation testing framework for Indodax platform (Web + Mobile)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    {name = "QA Team", email = "qa@indodax.com"},
+]
+keywords = [
+    "automation",
+    "testing",
+    "robot-framework",
+    "web-automation",
+    "mobile-automation",
+    "appium",
+    "playwright",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+
+dependencies = [
+    # Core Framework
+    "robotframework>=7.4.1",
+    "robotframework-requests>=0.9.7",
+    # Web Automation
+    "robotframework-browser>=18.0.0",
+    "playwright>=1.40.0",
+    "playwright-stealth>=1.0.0",
+    # Mobile Automation
+    "robotframework-appiumlibrary>=2.2.0",
+    "appium-python-client>=3.2.0",
+    # Supporting Libraries
+    "pyyaml>=6.0",
+    "python-dotenv>=1.2.0",
+    "requests>=2.31.0",
+    # JSON Schema Validation
+    "jsonschema>=4.0",
+    "fastmcp>=3.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pylint>=2.17.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "isort>=5.12.0",
+]
+
+docs = [
+    "sphinx>=6.0.0",
+    "sphinx-rtd-theme>=1.2.0",
+]
+
+db = [
+    # Database support (optional)
+    # "psycopg2-binary>=2.9",
+    # "pymongo>=4.0",
+    # "mysql-connector-python>=8.0",
+]
+
+all = [
+    "indodax-automation-framework[dev,docs,db]",
+]
+
+[project.urls]
+Homepage = "https://github.com/ikhsandwidanu/python_qa"
+Repository = "https://github.com/ikhsandwidanu/python_qa.git"
+Issues = "https://github.com/ikhsandwidanu/python_qa/issues"
+
+[tool.setuptools]
+# This is not a distributable package, just a testing framework
+# Tell setuptools to not discover any Python packages
+packages = []
+
+[tool.uv]
+# UV configuration for fast dependency resolution
+# UV will resolve dependencies 10-100x faster than pip
+prerelease = "if-necessary"
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312', 'py313']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | results
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip_glob = ["*/migrations/*"]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0111",  # missing-docstring
+    "C0103",  # invalid-name
+    "R0913",  # too-many-arguments
+    "R0914",  # too-many-locals
+]
+
+[tool.pylint.format]
+max-line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "unit: Unit tests",
+    "integration: Integration tests",
+    "slow: Slow running tests",
+]

@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indodax Depth Response Schema",
+  "type": "object",
+  "properties": {
+    "buy": {
+      "type": "array",
+      "description": "Array of buy orders",
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+          {
+            "type": "number",
+            "description": "Price"
+          },
+          {
+            "type": "number",
+            "description": "Amount"
+          }
+        ]
+      }
+    },
+    "sell": {
+      "type": "array",
+      "description": "Array of sell orders",
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": [
+          {
+            "type": "number",
+            "description": "Price"
+          },
+          {
+            "type": "number",
+            "description": "Amount"
+          }
+        ]
+      }
+    }
+  },
+  "required": ["buy", "sell"],
+  "additionalProperties": false
+}

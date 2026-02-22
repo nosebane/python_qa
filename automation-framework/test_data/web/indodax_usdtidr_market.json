@@ -1,0 +1,35 @@
+{
+  "market_pairs": {
+    "usdtidr": {
+      "name": "USDT/IDR",
+      "pair_id": "usdtidr",
+      "base_currency": "USDT",
+      "quote_currency": "IDR"
+    },
+    "btcidr": {
+      "name": "BTC/IDR",
+      "pair_id": "btcidr",
+      "base_currency": "BTC",
+      "quote_currency": "IDR"
+    }
+  },
+  "market_data": {
+    "usdtidr": {
+      "price": "16.945",
+      "change_24h": "-0.08%",
+      "volume_24h": "Market Data",
+      "bid": "16.94",
+      "ask": "16.95"
+    },
+    "btcidr": {
+      "price": "1.150.318.000",
+      "change_24h": "+1.15%",
+      "volume_24h": "Market Data",
+      "bid": "1.150.000.000",
+      "ask": "1.150.500.000"
+    }
+  },
+  "test_expectations": {
+    "page_title_expected": "USDT"
+  }
+}

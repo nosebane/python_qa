@@ -1,0 +1,119 @@
+version: '3.9'
+
+# ──────────────────────────────────────────────────────────────────
+# docker-compose.yml
+# Untuk eksekusi Web & API tests di VM (lokal atau CI/CD runner)
+# 
+# Usage:
+#   docker-compose run api-tests
+#   docker-compose run web-tests
+#   docker-compose run api-tests robot tests/api/indodax_public_api.robot
+# ──────────────────────────────────────────────────────────────────
+
+x-common-env: &common-env
+  TEST_ENV: ${TEST_ENV:-staging}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+
+x-common-volumes: &common-volumes
+  - ../..:/automation              # mount seluruh automation-framework ke /automation
+  - ../../results:/automation/results  # persist hasil ke host
+
+services:
+  # ────────────────────────────────────────
+  # API Tests (Public — tanpa auth)
+  # ────────────────────────────────────────
+  api-public:
+    build:
+      context: ../..
+      dockerfile: ci_cd/docker/Dockerfile.web-api
+    image: indodax-rf-runner:latest
+    container_name: rf-api-public
+    environment:
+      <<: *common-env
+      API_BASE_URL: ${API_BASE_URL}
+    volumes: *common-volumes
+    command: >
+      --outputdir results/api/public
+      --output output.xml
+      --log log.html
+      --report report.html
+      --variable TEST_ENV:${TEST_ENV:-staging}
+      --exclude skip
+      --loglevel INFO
+      --timestampoutputs
+      tests/api/indodax_public_api.robot
+
+  # ────────────────────────────────────────
+  # API Tests (Private — butuh API key/secret)
+  # ────────────────────────────────────────
+  api-private:
+    image: indodax-rf-runner:latest
+    container_name: rf-api-private
+    depends_on:
+      - api-public
+    environment:
+      <<: *common-env
+      PRIVATE_API_BASE_URL: ${PRIVATE_API_BASE_URL}
+      INDODAX_API_KEY: ${INDODAX_API_KEY}
+      INDODAX_API_SECRET: ${INDODAX_API_SECRET}
+    volumes: *common-volumes
+    command: >
+      --outputdir results/api/private
+      --output output.xml
+      --log log.html
+      --report report.html
+      --variable TEST_ENV:${TEST_ENV:-staging}
+      --exclude skip
+      --loglevel INFO
+      --timestampoutputs
+      tests/api/indodax_private_api.robot
+
+  # ────────────────────────────────────────
+  # Web Tests (Playwright — headless)
+  # ────────────────────────────────────────
+  web-tests:
+    image: indodax-rf-runner:latest
+    container_name: rf-web
+    environment:
+      <<: *common-env
+      WEB_BASE_URL: ${WEB_BASE_URL}
+      BROWSER: ${BROWSER:-chromium}
+      HEADLESS: ${HEADLESS:-true}
+    volumes: *common-volumes
+    command: >
+      --outputdir results/web/${BROWSER:-chromium}
+      --output output.xml
+      --log log.html
+      --report report.html
+      --variable TEST_ENV:${TEST_ENV:-staging}
+      --variable BROWSER:${BROWSER:-chromium}
+      --variable HEADLESS:${HEADLESS:-true}
+      --variable WEB_BASE_URL:${WEB_BASE_URL}
+      --exclude skip
+      --loglevel INFO
+      --timestampoutputs
+      tests/web/
+
+  # ────────────────────────────────────────
+  # Full API Suite: public + private sekaligus
+  # ────────────────────────────────────────
+  api-all:
+    image: indodax-rf-runner:latest
+    container_name: rf-api-all
+    environment:
+      <<: *common-env
+      API_BASE_URL: ${API_BASE_URL}
+      PRIVATE_API_BASE_URL: ${PRIVATE_API_BASE_URL}
+      INDODAX_API_KEY: ${INDODAX_API_KEY}
+      INDODAX_API_SECRET: ${INDODAX_API_SECRET}
+    volumes: *common-volumes
+    command: >
+      --outputdir results/api/all
+      --output output.xml
+      --log log.html
+      --report report.html
+      --variable TEST_ENV:${TEST_ENV:-staging}
+      --exclude skip
+      --loglevel INFO
+      --timestampoutputs
+      tests/api/

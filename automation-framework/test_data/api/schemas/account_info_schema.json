@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Indodax Account Info Response Schema",
+  "type": "object",
+  "properties": {
+    "return": {
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "object",
+          "description": "Account balances by currency",
+          "patternProperties": {
+            ".*": {
+              "type": "number"
+            }
+          }
+        },
+        "balance_hold": {
+          "type": "object",
+          "description": "Held balances by currency",
+          "patternProperties": {
+            ".*": {
+              "type": "number"
+            }
+          }
+        },
+        "address": {
+          "type": "object",
+          "description": "Deposit addresses",
+          "patternProperties": {
+            ".*": {
+              "type": "string"
+            }
+          }
+        },
+        "user_id": {
+          "type": ["string", "integer"],
+          "description": "User ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Account name"
+        }
+      },
+      "required": ["balance", "balance_hold"],
+      "additionalProperties": true
+    },
+    "success": {
+      "type": "integer",
+      "enum": [1],
+      "description": "Success indicator"
+    }
+  },
+  "required": ["return", "success"],
+  "additionalProperties": false
+}

@@ -1,0 +1,177 @@
+name: 🔌 API Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'automation-framework/tests/api/**'
+      - 'automation-framework/resources/keywords/api/**'
+      - 'automation-framework/libraries/api/**'
+      - 'automation-framework/test_data/api/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'automation-framework/tests/api/**'
+      - 'automation-framework/libraries/api/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [dev, staging, production]
+      test_suite:
+        description: 'Test suite to run'
+        required: false
+        default: 'all'
+        type: choice
+        options: [all, public, private]
+
+env:
+  PYTHON_VERSION: '3.11'
+  WORKING_DIR: automation-framework
+
+jobs:
+  # ─────────────────────────────────────────────
+  # PUBLIC API TESTS
+  # ─────────────────────────────────────────────
+  api-public:
+    name: 🌐 Public API — ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.test_suite != 'private' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Run Public API Tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          API_TIMEOUT: ${{ vars.API_TIMEOUT || '10' }}
+        run: |
+          robot \
+            --outputdir results/api/public \
+            --log log.html \
+            --report report.html \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'staging' }} \
+            --loglevel INFO \
+            --timestampoutputs \
+            tests/api/indodax_public_api.robot
+
+      - name: Upload Public API Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-public-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/api/public/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # PRIVATE API TESTS
+  # ─────────────────────────────────────────────
+  api-private:
+    name: 🔐 Private API — ${{ github.event.inputs.environment || 'staging' }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.test_suite != 'public' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: ${{ env.WORKING_DIR }}/requirements.txt
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIR }}
+        run: pip install -r requirements.txt
+
+      - name: Run Private API Tests
+        working-directory: ${{ env.WORKING_DIR }}
+        env:
+          API_BASE_URL: ${{ secrets.API_BASE_URL }}
+          PRIVATE_API_BASE_URL: ${{ secrets.PRIVATE_API_BASE_URL }}
+          INDODAX_API_KEY: ${{ secrets.INDODAX_API_KEY }}
+          INDODAX_API_SECRET: ${{ secrets.INDODAX_API_SECRET }}
+        run: |
+          robot \
+            --outputdir results/api/private \
+            --log log.html \
+            --report report.html \
+            --output output.xml \
+            --variable ENV:${{ github.event.inputs.environment || 'staging' }} \
+            --loglevel INFO \
+            --timestampoutputs \
+            tests/api/indodax_private_api.robot
+
+      - name: Upload Private API Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-private-results-${{ github.run_id }}
+          path: ${{ env.WORKING_DIR }}/results/api/private/
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # MERGE RESULTS
+  # ─────────────────────────────────────────────
+  api-report:
+    name: 📊 Merge API Reports
+    runs-on: ubuntu-latest
+    needs: [api-public, api-private]
+    if: always()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Robot Framework
+        run: pip install robotframework
+
+      - name: Download all results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: api-*-results-${{ github.run_id }}
+          path: results/
+          merge-multiple: false
+
+      - name: Merge XML outputs
+        run: |
+          rebot \
+            --outputdir results/merged \
+            --log log_merged.html \
+            --report report_merged.html \
+            --output output_merged.xml \
+            --name "Indodax API Tests" \
+            results/api-public-results-${{ github.run_id }}/output.xml \
+            results/api-private-results-${{ github.run_id }}/output.xml \
+            || true
+
+      - name: Upload Merged Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-merged-report-${{ github.run_id }}
+          path: results/merged/
+          retention-days: 30

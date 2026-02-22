@@ -1,0 +1,23 @@
+# Mobile Development Environment Configuration
+# Non-secret configuration - Safe to commit to git
+# Device secrets (APPIUM_SERVER, ANDROID_DEVICE_NAME, etc.) stored in .env.mobile.dev (gitignored)
+
+environment: mobile_dev
+debug: true
+
+# Appium Configuration
+appium:
+  new_command_timeout: 120   # seconds — longer for dev/debugging sessions
+
+# Timeouts (milliseconds where applicable, seconds otherwise)
+timeouts:
+  app_wait_timeout: 20000    # ms — wait for app launch (longer in dev)
+  implicit_wait: 10          # seconds
+  explicit_wait: 30          # seconds
+
+# Capabilities (non-secret device-agnostic defaults)
+capabilities:
+  no_reset: true             # dev: keep app data between test runs
+  disable_window_animation: true
+  auto_grant_permissions: true
+  reset_keyboard: true

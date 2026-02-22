@@ -1,0 +1,130 @@
+{
+  "api": {
+    "base_url_public": "https://indodax.com/api",
+    "base_url_private": "https://indodax.com/tapi",
+    "timeout": 30,
+    "retries": 3
+  },
+  "pairs": {
+    "btc_idr": {
+      "id": "btc_idr",
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "base": "btc",
+      "quote": "idr"
+    },
+    "eth_idr": {
+      "id": "eth_idr",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "base": "eth",
+      "quote": "idr"
+    },
+    "xrp_idr": {
+      "id": "xrp_idr",
+      "name": "Ripple",
+      "symbol": "XRP",
+      "base": "xrp",
+      "quote": "idr"
+    },
+    "ada_idr": {
+      "id": "ada_idr",
+      "name": "Cardano",
+      "symbol": "ADA",
+      "base": "ada",
+      "quote": "idr"
+    }
+  },
+  "invalid_pair": "invalid_pair_xyz",
+  "response_fields": {
+    "ticker": ["buy", "sell", "high", "low", "last", "vol", "price_24h"],
+    "depth": ["buy", "sell"],
+    "trades": ["trade_id", "type", "price", "amount", "date"],
+    "account_info": ["return", "server_time"],
+    "account_balance": ["return", "server_time"],
+    "open_orders": ["return", "server_time"]
+  },
+  "http_status": {
+    "ok": 200,
+    "created": 201,
+    "bad_request": 400,
+    "unauthorized": 401,
+    "forbidden": 403,
+    "not_found": 404,
+    "conflict": 409,
+    "server_error": 500,
+    "service_unavailable": 503
+  },
+  "response_validation": {
+    "default_expected_status": 200,
+    "public_api_endpoints": {
+      "ticker": {
+        "method": "GET",
+        "expected_status": 200,
+        "description": "Get ticker data for trading pair"
+      },
+      "depth": {
+        "method": "GET",
+        "expected_status": 200,
+        "description": "Get order book depth"
+      },
+      "trades": {
+        "method": "GET",
+        "expected_status": 200,
+        "description": "Get recent trades"
+      }
+    },
+    "private_api_endpoints": {
+      "trade": {
+        "method": "POST",
+        "expected_status": 200,
+        "description": "Place buy/sell order"
+      },
+      "getInfo": {
+        "method": "POST",
+        "expected_status": 200,
+        "description": "Get account information"
+      },
+      "getBalance": {
+        "method": "POST",
+        "expected_status": 200,
+        "description": "Get account balance"
+      },
+      "cancelOrder": {
+        "method": "POST",
+        "expected_status": 200,
+        "description": "Cancel an order"
+      },
+      "openOrders": {
+        "method": "POST",
+        "expected_status": 200,
+        "description": "Get open orders"
+      },
+      "tradeHistory": {
+        "method": "POST",
+        "expected_status": 200,
+        "description": "Get trade history"
+      }
+    },
+    "error_scenarios": {
+      "invalid_pair": {
+        "expected_status": 200,
+        "contains_error": true,
+        "error_field": "error",
+        "error_value": "invalid_pair",
+        "description": "Invalid pair should return error in JSON body with HTTP 200"
+      },
+      "unauthorized": {
+        "expected_status": 200,
+        "contains_error": true,
+        "error_field": "error",
+        "description": "Authentication error returns HTTP 200 with error in body"
+      },
+      "validation_error": {
+        "expected_status": 200,
+        "contains_error": true,
+        "description": "Validation errors (negative price, zero amount) return HTTP 200 with error"
+      }
+    }
+  }
+}

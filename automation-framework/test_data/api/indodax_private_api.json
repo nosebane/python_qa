@@ -1,0 +1,151 @@
+{
+  "test_cases": [
+    {
+      "id": "auth_valid_credentials",
+      "name": "Authentication with valid credentials",
+      "tags": ["authentication", "positive_case", "smoke", "critical"],
+      "description": "Verify authentication with valid credentials"
+    },
+    {
+      "id": "auth_invalid_key",
+      "name": "Authentication with invalid API key",
+      "tags": ["authentication", "negative_case", "security"],
+      "description": "Verify authentication fails with invalid API key"
+    },
+    {
+      "id": "get_account_balance",
+      "name": "Get account balance",
+      "tags": ["account", "balance", "positive_case", "smoke"],
+      "description": "Retrieve account balance for all assets"
+    }
+  ],
+  "authentication_test_data": {
+    "valid_credentials": {
+      "description": "Valid API credentials",
+      "note": "Loaded from .env file at runtime"
+    },
+    "invalid_credentials": {
+      "api_key": "invalid_api_key_xyz123456",
+      "api_secret": "invalid_secret_xyz123456",
+      "description": "Invalid credentials for testing rejection"
+    },
+    "dummy_credentials": {
+      "api_key": "dummy_key",
+      "api_secret": "dummy_secret",
+      "description": "Dummy credentials for testing signature validation"
+    }
+  },
+  "order_test_data": {
+    "buy_orders": [
+      {
+        "id": "buy_order_btc_standard",
+        "pair_id": "btc_idr",
+        "type": "buy",
+        "price": 500000000,
+        "amount": 0.001,
+        "description": "Standard buy order for BTC"
+      },
+      {
+        "id": "buy_order_eth_standard",
+        "pair_id": "eth_idr",
+        "type": "buy",
+        "price": 30000000,
+        "amount": 0.1,
+        "description": "Standard buy order for ETH"
+      }
+    ],
+    "sell_orders": [
+      {
+        "id": "sell_order_btc_standard",
+        "pair_id": "btc_idr",
+        "type": "sell",
+        "price": 550000000,
+        "amount": 0.001,
+        "description": "Standard sell order for BTC"
+      },
+      {
+        "id": "sell_order_eth_standard",
+        "pair_id": "eth_idr",
+        "type": "sell",
+        "price": 30000000,
+        "amount": 0.1,
+        "description": "Standard sell order for ETH"
+      }
+    ]
+  },
+  "order_validation_test_data": {
+    "negative_price": {
+      "pair_id": "btc_idr",
+      "price": -500000000,
+      "amount": 0.001,
+      "description": "Order with negative price (validation test)"
+    },
+    "zero_amount": {
+      "pair_id": "btc_idr",
+      "price": 500000000,
+      "amount": 0,
+      "description": "Order with zero amount (validation test)"
+    },
+    "invalid_pair": {
+      "pair_id": "invalid_pair_xyz",
+      "price": 500000000,
+      "amount": 0.001,
+      "description": "Order with invalid trading pair"
+    }
+  },
+  "order_management_test_data": {
+    "cancel_order": {
+      "order_id": "123456789",
+      "pair_id": "btc_idr",
+      "description": "Test data for cancelling an order"
+    },
+    "get_open_orders_btc": {
+      "pair_id": "btc_idr",
+      "description": "Get open orders for specific pair (BTC)"
+    },
+    "get_open_orders_eth": {
+      "pair_id": "eth_idr",
+      "description": "Get open orders for specific pair (ETH)"
+    }
+  },
+  "account_test_data": {
+    "get_account_info": {
+      "description": "Get account information",
+      "expected_fields": ["return", "server_time"]
+    },
+    "get_account_balance": {
+      "description": "Get account balance",
+      "expected_fields": ["return", "server_time"]
+    },
+    "get_open_orders": {
+      "description": "Get list of open orders",
+      "expected_fields": ["return", "server_time"]
+    },
+    "get_order_history": {
+      "description": "Get order history",
+      "expected_fields": ["return", "server_time"]
+    }
+  },
+  "data_driven_scenarios": {
+    "order_scenarios": [
+      {
+        "pair_id": "btc_idr",
+        "type": "buy",
+        "price": 500000000,
+        "amount": 0.001
+      },
+      {
+        "pair_id": "eth_idr",
+        "type": "buy",
+        "price": 30000000,
+        "amount": 0.1
+      },
+      {
+        "pair_id": "btc_idr",
+        "type": "sell",
+        "price": 550000000,
+        "amount": 0.001
+      }
+    ]
+  }
+}

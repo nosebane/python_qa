@@ -1,0 +1,20 @@
+# Development Environment Configuration
+# Non-secret configuration - Safe to commit to git
+# Secrets (URLs, API keys) stored in .env.dev (gitignored)
+
+environment: dev
+debug: true
+
+# API Configuration
+api:
+  timeout: 5              # seconds — used by RequestsLibrary
+  verify_ssl: false
+  max_retries: 3
+  retry_delay: 2
+
+# Timeouts
+timeouts:
+  connect_timeout: 3
+  read_timeout: 5
+  write_timeout: 3
+  browser_navigation_timeout: 60
