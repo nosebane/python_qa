@@ -1,4 +1,4 @@
-# Indodax Automation Framework
+# RF Test Automation 
 
 > End-to-end test automation suite for the [Indodax](https://indodax.com) cryptocurrency exchange — covering API, Web, and Mobile (Android/iOS) layers using Robot Framework.
 
