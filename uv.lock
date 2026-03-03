@@ -1023,6 +1023,7 @@ dependencies = [
     { name = "robotframework" },
     { name = "robotframework-appiumlibrary" },
     { name = "robotframework-browser" },
+    { name = "robotframework-jsonlibrary" },
     { name = "robotframework-requests" },
 ]
 
@@ -1074,6 +1075,7 @@ requires-dist = [
     { name = "robotframework", specifier = ">=7.4.1" },
     { name = "robotframework-appiumlibrary", specifier = ">=2.2.0" },
     { name = "robotframework-browser", specifier = ">=18.0.0" },
+    { name = "robotframework-jsonlibrary", specifier = ">=0.5" },
     { name = "robotframework-requests", specifier = ">=0.9.7" },
     { name = "sphinx", marker = "extra == 'docs'", specifier = ">=6.0.0" },
     { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = ">=1.2.0" },
@@ -1153,6 +1155,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/df/bf/f7da0350254c0ed7c72f3e33cef02e048281fec7ecec5f032d4aac52226b/jinja2-3.1.6.tar.gz", hash = "sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d", size = 245115, upload-time = "2025-03-05T20:05:02.478Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl", hash = "sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67", size = 134899, upload-time = "2025-03-05T20:05:00.369Z" },
+]
+
+[[package]]
+name = "jsonpath-ng"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ply" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/86/08646239a313f895186ff0a4573452038eed8c86f54380b3ebac34d32fb2/jsonpath-ng-1.7.0.tar.gz", hash = "sha256:f6f5f7fd4e5ff79c785f1573b394043b39849fb2bb47bcead935d12b00beab3c", size = 37838, upload-time = "2024-10-11T15:41:42.404Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/5a/73ecb3d82f8615f32ccdadeb9356726d6cae3a4bbc840b437ceb95708063/jsonpath_ng-1.7.0-py3-none-any.whl", hash = "sha256:f3d7f9e848cba1b6da28c55b1c26ff915dc9e0b1ba7e752a53d6da8d5cbd00b6", size = 30105, upload-time = "2024-11-20T17:58:30.418Z" },
 ]
 
 [[package]]
@@ -1510,6 +1524,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f9/e2/3e91f31a7d2b083fe6ef3fa267035b518369d9511ffab804f839851d2779/pluggy-1.6.0.tar.gz", hash = "sha256:7dcc130b76258d33b90f61b658791dede3486c3e6bfb003ee5c9bfb396dd22f3", size = 69412, upload-time = "2025-05-15T12:30:07.975Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/54/20/4d324d65cc6d9205fabedc306948156824eb9f0ee1633355a8f7ec5c66bf/pluggy-1.6.0-py3-none-any.whl", hash = "sha256:e920276dd6813095e9377c0bc5566d94c932c33b27a3e3945d8389c374dd4746", size = 20538, upload-time = "2025-05-15T12:30:06.134Z" },
+]
+
+[[package]]
+name = "ply"
+version = "3.11"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3", size = 159130, upload-time = "2018-02-15T19:01:31.097Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce", size = 49567, upload-time = "2018-02-15T19:01:27.172Z" },
 ]
 
 [[package]]
@@ -2133,6 +2156,17 @@ dependencies = [
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c0/bf/a2d10ff6675238ce6ce1496e556433a4bd9b682c199429516c68efae0c2b/robotframework_browser-19.12.5-py3-none-any.whl", hash = "sha256:3f989cb947fe2128fa18a8c7a853aab6cb8d2c515f6bf75ad8e9c34ecbd6d765", size = 371865, upload-time = "2026-02-11T15:03:46.95Z" },
 ]
+
+[[package]]
+name = "robotframework-jsonlibrary"
+version = "0.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jsonpath-ng" },
+    { name = "jsonschema" },
+    { name = "robotframework" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/09/e0/0031756305cda8671745387b3394fbe56fedd833947d46245efbe46b6d45/robotframework-jsonlibrary-0.5.tar.gz", hash = "sha256:000ac2e53c7f96e3b749c6b5595fcec87d5291b4afc03fb252470356a7d5da1f", size = 5538, upload-time = "2022-08-08T08:54:38.018Z" }
 
 [[package]]
 name = "robotframework-pythonlibcore"

@@ -1,23 +1,27 @@
 *** Settings ***
-Documentation    Shared Mobile Test Settings and Configuration
-...             Common libraries, resources, and setup/teardown for all mobile tests
-...             Appium + Robot Framework integration
-...             NOTE: Requires AppiumLibrary: pip install robotframework-appiumlibrary
+Documentation       Shared Mobile Test Settings and Configuration
+...                 Common libraries, resources, and setup/teardown for all mobile tests
+...                 Appium + Robot Framework integration
+...                 NOTE: Requires AppiumLibrary: pip install robotframework-appiumlibrary
 ...
-...             Config strategy:
-...             - .env.mobile.${TEST_ENV}                   → device secrets (APPIUM_SERVER, ANDROID_DEVICE_NAME, etc.)
-...             - mobile_${TEST_ENV}.yaml                   → non-secret config (timeouts, capabilities)
+...                 Config strategy:
+...                 - .env.mobile.${TEST_ENV}    → device secrets (APPIUM_SERVER, ANDROID_DEVICE_NAME, etc.)
+...                 - mobile_${TEST_ENV}.yaml    → non-secret config (timeouts, capabilities)
 
-Library    AppiumLibrary
-Library    Collections
-Library    String
-Library    OperatingSystem
-Library    Process
-Library    ${CURDIR}/../../../libraries/base/config_manager.py    WITH NAME    ConfigManager
+Library             Collections
+Library             OperatingSystem
+Library             Process
+Library             String
+Library             AppiumLibrary
+Library             JSONLibrary
+Library             ${CURDIR}/../../../libraries/base/config_manager.py    AS    ConfigManager
+
+
+*** Variables ***
+${TEST_ENV}=    production
 
 
 *** Keywords ***
-
 Load Mobile Environment Variables
     [Documentation]    Load mobile test environment variables.
     ...
@@ -67,69 +71,75 @@ Load Mobile Environment Variables
     Set Suite Variable    ${ANDROID_AUTOMATION_NAME}    ${automation_name}
 
     ${grant_match}=    Get Regexp Matches    ${appium_content}    AUTO_GRANT_PERMISSIONS=([^\n]+)    1
-    ${grant_str}=    Get From List    ${grant_match}    0
+    ${grant_str}=    Set Variable If    ${grant_match}    ${grant_match}[0]    false
     ${grant_permissions}=    Set Variable If    '${grant_str.lower()}' == 'true'    ${TRUE}    ${FALSE}
     Set Suite Variable    ${AUTO_GRANT_PERMISSIONS}    ${grant_permissions}
 
     ${keyboard_match}=    Get Regexp Matches    ${appium_content}    RESET_KEYBOARD=([^\n]+)    1
-    ${keyboard_str}=    Run Keyword If    ${keyboard_match}    Get From List    ${keyboard_match}    0    ELSE    Set Variable    false
+    ${keyboard_str}=    Set Variable If    ${keyboard_match}    ${keyboard_match}[0]    false
     ${reset_keyboard}=    Set Variable If    '${keyboard_str.lower()}' == 'true'    ${TRUE}    ${FALSE}
     Set Suite Variable    ${RESET_KEYBOARD}    ${reset_keyboard}
 
     ${noreset_match}=    Get Regexp Matches    ${appium_content}    NO_RESET=([^\n]+)    1
-    ${noreset_str}=    Run Keyword If    ${noreset_match}    Get From List    ${noreset_match}    0    ELSE    Set Variable    false
+    ${noreset_str}=    Set Variable If    ${noreset_match}    ${noreset_match}[0]    false
     ${no_reset}=    Set Variable If    '${noreset_str.lower()}' == 'true'    ${TRUE}    ${FALSE}
     Set Suite Variable    ${NO_RESET}    ${no_reset}
 
     ${animation_match}=    Get Regexp Matches    ${appium_content}    DISABLE_WINDOW_ANIMATION=([^\n]+)    1
-    ${animation_str}=    Run Keyword If    ${animation_match}    Get From List    ${animation_match}    0    ELSE    Set Variable    false
+    ${animation_str}=    Set Variable If    ${animation_match}    ${animation_match}[0]    false
     ${disable_animation}=    Set Variable If    '${animation_str.lower()}' == 'true'    ${TRUE}    ${FALSE}
     Set Suite Variable    ${DISABLE_WINDOW_ANIMATION}    ${disable_animation}
 
     # --- Load non-secret config from mobile_${TEST_ENV}.yaml ---
     ${yaml_config}=    Get Environment Config    mobile_${env_name}
-    ${appium_cfg}=     Get From Dictionary    ${yaml_config}    appium
+    ${appium_cfg}=    Get From Dictionary    ${yaml_config}    appium
     ${timeout_cfg}=    Get From Dictionary    ${yaml_config}    timeouts
-    ${new_cmd_timeout}=     Get From Dictionary    ${appium_cfg}    new_command_timeout
+    ${new_cmd_timeout}=    Get From Dictionary    ${appium_cfg}    new_command_timeout
     ${app_wait_timeout}=    Get From Dictionary    ${timeout_cfg}    app_wait_timeout
-    ${implicit_wait}=       Get From Dictionary    ${timeout_cfg}    implicit_wait
-    ${explicit_wait}=       Get From Dictionary    ${timeout_cfg}    explicit_wait
+    ${implicit_wait}=    Get From Dictionary    ${timeout_cfg}    implicit_wait
+    ${explicit_wait}=    Get From Dictionary    ${timeout_cfg}    explicit_wait
     Set Suite Variable    ${MOBILE_NEW_CMD_TIMEOUT}    ${new_cmd_timeout}
     Set Suite Variable    ${MOBILE_APP_WAIT_TIMEOUT}    ${app_wait_timeout}
     Set Suite Variable    ${MOBILE_IMPLICIT_WAIT}    ${implicit_wait}
     Set Suite Variable    ${MOBILE_EXPLICIT_WAIT}    ${explicit_wait}
-    
+
     Log    ✓ Mobile environment variables loaded    INFO
     Log    Environment: ${env_name}    INFO
     Log    Appium Server: ${APPIUM_SERVER}    INFO
     Log    Device: ${ANDROID_DEVICE_NAME} (${ANDROID_PLATFORM_VERSION})    INFO
     Log    App: ${ANDROID_APP_PACKAGE}/${ANDROID_APP_ACTIVITY}    INFO
-    Log    Capabilities: noReset=${NO_RESET}, autoGrant=${AUTO_GRANT_PERMISSIONS}, disableAnimation=${DISABLE_WINDOW_ANIMATION}    INFO
-    Log    YAML timeouts: newCmd=${MOBILE_NEW_CMD_TIMEOUT}s, appWait=${MOBILE_APP_WAIT_TIMEOUT}ms, implicit=${MOBILE_IMPLICIT_WAIT}s, explicit=${MOBILE_EXPLICIT_WAIT}s    INFO
-
+    Log
+    ...    Capabilities: noReset=${NO_RESET}, autoGrant=${AUTO_GRANT_PERMISSIONS}, disableAnimation=${DISABLE_WINDOW_ANIMATION}
+    ...    INFO
+    Log
+    ...    YAML timeouts: newCmd=${MOBILE_NEW_CMD_TIMEOUT}s, appWait=${MOBILE_APP_WAIT_TIMEOUT}ms, implicit=${MOBILE_IMPLICIT_WAIT}s, explicit=${MOBILE_EXPLICIT_WAIT}s
+    ...    INFO
 
 Initialize Test Environment
     [Documentation]    Initialize test environment based on TEST_ENV variable
     ...    Loads environment configuration and setup mobile test prerequisites
-    ...    
+    ...
     ...    Supports environments:
     ...    - dev: Development environment
     ...    - staging: Staging environment
     ...    - production: Production environment (default)
-    ...    
+    ...
     ...    Usage:
     ...    Suite Setup    Initialize Test Environment
     ...    Or with variable override:
     ...    robot -v TEST_ENV:staging tests/mobile/search_and_validate_eth.robot
-    
+
     # Set TEST_ENV if passed, otherwise use default from test file
     Log    Initializing test environment: ${TEST_ENV}    INFO
-    
+
+    # Register safe on-failure handler to avoid "No application is open" warning
+    # when Appium session times out or app is not connected
+    Register Keyword To Run On Failure    Safe Capture Screenshot On Failure
+
     # Load environment variables from .env file
     Load Mobile Environment Variables
-    
-    Log    ✓ Test environment initialized for: ${TEST_ENV}    INFO
 
+    Log    ✓ Test environment initialized for: ${TEST_ENV}    INFO
 
 Open Indodax App
     [Documentation]    Launch Indodax app on connected Android device using environment variables
@@ -137,7 +147,7 @@ Open Indodax App
     ...    Uses: APPIUM_SERVER, ANDROID_PLATFORM_VERSION, ANDROID_AUTOMATION_NAME,
     ...          ANDROID_APP_PACKAGE, ANDROID_APP_ACTIVITY,
     ...          AUTO_GRANT_PERMISSIONS, NO_RESET, DISABLE_WINDOW_ANIMATION
-    
+
     Log    Launching Indodax app on ${ANDROID_APP_PACKAGE}...    INFO
     Open Application    ${APPIUM_SERVER}
     ...    platformName=Android
@@ -153,60 +163,59 @@ Open Indodax App
     ...    newCommandTimeout=${MOBILE_NEW_CMD_TIMEOUT}
     Log    ✓ Indodax app launched successfully    INFO
 
-
-Load iOS Environment Variables
+Load IOS Environment Variables
     [Documentation]    Load iOS mobile test environment variables from .env.mobile.ios.${TEST_ENV}
     ...    Sets suite variables for Appium server, iOS device, and XCUITest capabilities
-    ...    
+    ...
     ...    Usage:
     ...    robot -v MOBILE_OS:ios tests/mobile/...
     ...    Requires .env.mobile.ios.production (or staging/dev) to exist
-    
+
     ${env_name}=    Set Variable If    '${TEST_ENV}' != ''    ${TEST_ENV}    production
     ${env_file}=    Set Variable    ${CURDIR}/../../../.env.mobile.ios.${env_name}
     ${ios_content}=    Get File    ${env_file}
-    
+
     # Appium Server
     ${match}=    Get Regexp Matches    ${ios_content}    APPIUM_SERVER=([^\n]+)    1
     Set Suite Variable    ${APPIUM_SERVER}    ${match}[0]
-    
+
     # iOS Device
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_DEVICE_NAME=([^\n]+)    1
     Set Suite Variable    ${IOS_DEVICE_NAME}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_UDID=([^\n]+)    1
     Set Suite Variable    ${IOS_UDID}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_PLATFORM_VERSION=([^\n]+)    1
     Set Suite Variable    ${IOS_PLATFORM_VERSION}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_AUTOMATION_NAME=([^\n]+)    1
     Set Suite Variable    ${IOS_AUTOMATION_NAME}    ${match}[0]
-    
+
     # iOS App
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_BUNDLE_ID=([^\n]+)    1
     Set Suite Variable    ${IOS_BUNDLE_ID}    ${match}[0]
-    
+
     # WDA Config
     ${match}=    Get Regexp Matches    ${ios_content}    WDA_BUNDLE_ID=([^\n]+)    1
     Set Suite Variable    ${WDA_BUNDLE_ID}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    WDA_LAUNCH_TIMEOUT=([^\n]+)    1
     Set Suite Variable    ${WDA_LAUNCH_TIMEOUT}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    WDA_CONNECTION_TIMEOUT=([^\n]+)    1
     Set Suite Variable    ${WDA_CONNECTION_TIMEOUT}    ${match}[0]
-    
+
     # Capabilities
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_NO_RESET=([^\n]+)    1
     Set Suite Variable    ${IOS_NO_RESET}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_AUTO_ACCEPT_ALERTS=([^\n]+)    1
     Set Suite Variable    ${IOS_AUTO_ACCEPT_ALERTS}    ${match}[0]
-    
+
     ${match}=    Get Regexp Matches    ${ios_content}    IOS_NEW_COMMAND_TIMEOUT=([^\n]+)    1
     Set Suite Variable    ${IOS_NEW_COMMAND_TIMEOUT}    ${match}[0]
-    
+
     Log    ✓ iOS environment variables loaded    INFO
     Log    Environment: ${env_name}    INFO
     Log    Appium Server: ${APPIUM_SERVER}    INFO
@@ -214,24 +223,22 @@ Load iOS Environment Variables
     Log    App Bundle: ${IOS_BUNDLE_ID}    INFO
     Log    Capabilities: noReset=${IOS_NO_RESET}, autoAcceptAlerts=${IOS_AUTO_ACCEPT_ALERTS}    INFO
 
-
-Initialize iOS Test Environment
+Initialize IOS Test Environment
     [Documentation]    Initialize test environment for iOS device testing
     ...    Loads iOS environment variables from .env.mobile.ios.${TEST_ENV}
-    ...    
+    ...
     ...    Usage:
-    ...    Suite Setup    Initialize iOS Test Environment
-    
+    ...    Suite Setup    Initialize IOS Test Environment
+
     Log    Initializing iOS test environment: ${TEST_ENV}    INFO
-    Load iOS Environment Variables
+    Load IOS Environment Variables
     Log    ✓ iOS test environment initialized for: ${TEST_ENV}    INFO
 
-
-Open Indodax iOS App
+Open Indodax IOS App
     [Documentation]    Launch Indodax app on connected iOS device using environment variables
-    ...    Requires Load iOS Environment Variables to be called first (via Initialize iOS Test Environment)
+    ...    Requires Load IOS Environment Variables to be called first (via Initialize IOS Test Environment)
     ...    Uses XCUITest driver — install via: appium driver install xcuitest
-    ...    
+    ...
     ...    Capabilities used:
     ...    - platformName=iOS
     ...    - deviceName, udid, platformVersion
@@ -239,7 +246,7 @@ Open Indodax iOS App
     ...    - bundleId (instead of appPackage for iOS)
     ...    - wdaLaunchTimeout, wdaConnectionTimeout
     ...    - autoAcceptAlerts, noReset, newCommandTimeout
-    
+
     Log    Launching Indodax iOS app (${IOS_BUNDLE_ID})...    INFO
     Open Application    ${APPIUM_SERVER}
     ...    platformName=iOS
@@ -254,7 +261,6 @@ Open Indodax iOS App
     ...    noReset=${IOS_NO_RESET}
     ...    newCommandTimeout=${IOS_NEW_COMMAND_TIMEOUT}
     Log    ✓ Indodax iOS app launched successfully    INFO
-
 
 Open Test App
     [Documentation]    Test Setup keyword — open the Indodax app and stabilize initial state.
@@ -292,6 +298,16 @@ Open Test App
 
     Log    ✓ App ready — home screen stabilized    INFO
 
+Safe Capture Screenshot On Failure
+    [Documentation]    Safe on-failure handler registered via Register Keyword To Run On Failure.
+    ...    Replaces AppiumLibrary default 'Capture Page Screenshot' which throws
+    ...    'No application is open' when Appium session has timed out or a keyword
+    ...    fails inside a TRY/EXCEPT block (on-failure still fires for caught errors).
+    TRY
+        Capture Page Screenshot
+    EXCEPT
+        Log    Could not capture failure screenshot (no active Appium session)    DEBUG
+    END
 
 Capture Screenshot On Failure And Close App
     [Documentation]    Test Teardown keyword — capture screenshot on failure then close the app.

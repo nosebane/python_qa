@@ -54,6 +54,7 @@ dependencies = [
     # JSON Schema Validation
     "jsonschema>=4.0",
     "fastmcp>=3.0.1",
+    "robotframework-jsonlibrary>=0.5",
 ]
 
 [project.optional-dependencies]

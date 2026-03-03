@@ -1,0 +1,18 @@
+{
+  "search": {
+    "term": "ETH",
+    "expected_pair": "ETH/IDR",
+    "expected_page_text": "ETH",
+    "no_result_text": "No result for the keyword you're searching"
+  },
+  "screenshots": {
+    "after_onboarding": "m03_after_onboarding.png",
+    "after_market_click": "m03b_after_market_click.png",
+    "search_results": "m04_search_results.png",
+    "eth_trading_page": "m05_eth_trading_page.png"
+  },
+  "timeouts": {
+    "search_result_timeout": "10s",
+    "page_load_timeout": "20s"
+  }
+}

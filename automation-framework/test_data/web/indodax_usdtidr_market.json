@@ -11,6 +11,12 @@
       "pair_id": "btcidr",
       "base_currency": "BTC",
       "quote_currency": "IDR"
+    },
+    "ethidr": {
+      "name": "ETH/IDR",
+      "pair_id": "ethidr",
+      "base_currency": "ETH/",
+      "quote_currency": "IDR"
     }
   },
   "market_data": {

@@ -7,7 +7,7 @@ debug: true
 
 # Appium Configuration
 appium:
-  new_command_timeout: 120   # seconds — longer for dev/debugging sessions
+  new_command_timeout: 300   # seconds — enough for multi-strategy fallback keyword chains
 
 # Timeouts (milliseconds where applicable, seconds otherwise)
 timeouts:

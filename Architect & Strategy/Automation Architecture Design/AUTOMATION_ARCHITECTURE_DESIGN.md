@@ -1,6 +1,6 @@
 # Automation Test Framework Architecture Design
 
-**Version:** 1.0  
+**Version:** 2.0  
 **Date:** February 2026  
 **Status:** Implemented & Verified
 
@@ -14,6 +14,8 @@
 5. [Environment Strategy](#environment-strategy)
 6. [Test Execution Strategy](#test-execution-strategy)
 7. [Error Handling & Reporting Strategy](#error-handling--reporting-strategy)
+8. [Test Data Strategy](#test-data-strategy)
+9. [Keyword Dictionary](#keyword-dictionary)
 
 ---
 
@@ -23,14 +25,16 @@ This document describes the actual implementation of the automation testing fram
 
 | Component | Technology |
 |---|---|
-| Core Orchestrator | Robot Framework 7.x |
-| Web Automation | Browser Library (Playwright) |
-| API Testing | RequestsLibrary + Custom Libraries |
-| Mobile Automation | AppiumLibrary (Appium) |
+| Core Orchestrator | Robot Framework 7.4.1 |
+| Web Automation | Browser Library (Playwright) 19.0.0+ |
+| API Testing | RequestsLibrary + JSONLibrary + Custom Libraries |
+| Mobile Automation | AppiumLibrary 3.2.1 (Appium 2.x) |
+| Parallel Execution | robotframework-pabot 5.2.2 |
 | Config Management | ConfigManager (Hybrid YAML + .env) |
 | Request Signing | IndodaxSignerLibrary (HMAC-SHA512) |
-| Validation | ApiSchemaValidator, ResponseValidator |
-| Runtime | Python 3.13.3 / venv |
+| JSON Parsing | JSONLibrary 0.5 (`Get Value From Json` / JSONPath) |
+| Validation | jsonschema 4.0+ + ResponseValidator |
+| Runtime | Python 3.13 / uv |
 
 ---
 
@@ -51,29 +55,30 @@ The framework is built on 5 distinct layers, each with a single clear responsibi
 │             BUSINESS LOGIC / KEYWORDS LAYER             │
 │  resources/keywords/api/   — api_settings, base_kw      │
 │  resources/keywords/web/   — web_settings, test_data    │
-│  resources/keywords/mobile/— mobile_settings            │
+│  resources/keywords/mobile/— mobile_settings, test_data │
 └──────────────────────────────────────────────────────────┘
                             ↓
 ┌──────────────────────────────────────────────────────────┐
 │                  ABSTRACTION LAYER                       │
-│  resources/page_objects/web/   — BasePage, MarketPage   │
-│  resources/page_objects/mobile/— per-screen keywords    │
-│                                  + locator files        │
+│  resources/page_objects/web/   — MarketPage             │
+│  resources/page_objects/mobile/android/ — per-screen    │
+│                                  keywords + locators    │
 └──────────────────────────────────────────────────────────┘
                             ↓
 ┌──────────────────────────────────────────────────────────┐
 │             CUSTOM PYTHON LIBRARIES LAYER               │
 │  libraries/base/config_manager.py                       │
 │  libraries/api/IndodaxSignerLibrary.py  (HMAC-SHA512)   │
-│  libraries/api/ApiSchemaValidator.py                    │
+│  libraries/api/indodax_signer.py        (signing core)  │
 │  libraries/api/ResponseValidator.py                     │
 └──────────────────────────────────────────────────────────┘
                             ↓
 ┌──────────────────────────────────────────────────────────┐
 │               EXTERNAL LIBRARIES & SUT                  │
-│  RequestsLibrary → indodax.com/api/  &  /tapi           │
+│  RequestsLibrary  → indodax.com/api/  &  /tapi          │
+│  JSONLibrary      → JSON parsing / JSONPath extraction  │
 │  Browser (Playwright) → indodax.com                     │
-│  AppiumLibrary → id.co.bitcoin (Android)                │
+│  AppiumLibrary    → id.co.bitcoin.Bitcoin-Trading-Platform│
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -89,7 +94,6 @@ base_keywords.robot        → generic HTTP assertion keywords
 indodax_public_api.robot   → public API-specific keywords
 indodax_private_api.robot  → private API + HMAC signing keywords
 IndodaxSignerLibrary.py    → HMAC-SHA512 request signing only
-ApiSchemaValidator.py      → JSON schema validation only
 ResponseValidator.py       → HTTP status code validation only
 config_manager.py          → config loading only (YAML + .env)
 ```
@@ -139,56 +143,55 @@ web/market/indodax_usdtidr_market_page_keywords.robot
 automation-framework/
 ├── tests/
 │   ├── api/
-│   │   ├── indodax_public_api.robot      (7 test cases)
-│   │   └── indodax_private_api.robot     (3 test cases)
 │   ├── web/
-│   │   └── indodax_usdtidr_market.robot  (11 test cases)
-│   └── mobile/(Android & IOS)
-│       └── search_and_validate_eth.robot (1 test case — Android)
+│   └── mobile/android & ios
 │
 ├── resources/
 │   ├── keywords/
 │   │   ├── api/
 │   │   │   ├── api_settings.robot        (suite setup/teardown)
 │   │   │   ├── base_keywords.robot       (generic HTTP keywords)
-│   │   │   ├── indodax_public_api.robot  (public endpoint keywords)
-│   │   │   ├── indodax_private_api.robot (private/HMAC keywords)
 │   │   │   └── test_data_loader.robot    (JSON loader)
 │   │   ├── web/
 │   │   │   ├── web_settings.robot        (suite setup/teardown)
 │   │   │   └── web_test_data.robot       (JSON loader)
 │   │   └── mobile/
-│   │       └── mobile_settings.robot     (suite setup/teardown)
+│   │       ├── mobile_settings.robot     (suite setup/teardown, Appium init)
+│   │       └── mobile_test_data.robot    (JSON loader for mobile test data)
 │   │
 │   └── page_objects/
 │       ├── web/
-│       │   ├── base_page.py
-│       │   ├── indodax_usdtidr_market_page.py
 │       │   └── market/
-│       │       ├── indodax_usdtidr_market_page_keywords.robot
-│       │       └── indodax_usdtidr_market_page_locators.robot
-│       └── mobile/                        (per-screen split: keywords + locators)
-│           ├── common/common_keywords.robot
-│           ├── auth/         login_keywords.robot  · login_locators.robot
-│           ├── home/         home_keywords.robot   · home_locators.robot
-│           ├── market/       market_keywords.robot · market_locators.robot
-│           ├── trading/
-│           │   ├── lite/     trading_lite_keywords.robot · trading_lite_locators.robot
-│           │   └── pro/      trading_pro_keywords.robot
-│           ├── onboarding/   onboarding_keywords.robot · onboarding_locators.robot
-│           ├── portfolio/    portfolio_keywords.robot · portfolio_locators.robot
-│           ├── account/      account_keywords.robot · account_locators.robot
-│           └── payment/
-│               ├── deposit/  deposit_keywords.robot · deposit_locators.robot
-│               └── withdraw/ withdraw_keywords.robot · withdraw_locators.robot
+│       └── mobile/
+│           ├── android/                  (per-screen split: keywords + locators — active)
+│           │   ├── common/common_keywords.robot
+│           │   ├── auth/        login_keywords.robot · login_locators.robot
+│           │   ├── home/        home_keywords.robot · home_locators.robot
+│           │   ├── market/      market_keywords.robot · market_locators.robot
+│           │   ├── trading/
+│           │   │   ├── lite/    trading_lite_keywords.robot · trading_lite_locators.robot
+│           │   │   └── pro/     trading_pro_keywords.robot
+│           │   ├── onboarding/  onboarding_keywords.robot · onboarding_locators.robot
+│           │   ├── portfolio/   portfolio_keywords.robot · portfolio_locators.robot
+│           │   ├── account/     account_keywords.robot · account_locators.robot
+│           │   └── payment/     deposit_keywords.robot · withdraw_keywords.robot
+│           └── ios/                      (same screen structure — planned, pending WDA signing)
+│               ├── common/
+│               ├── home/
+│               ├── market/
+│               └── ...
 │
 ├── libraries/
-│   ├── base/config_manager.py            (Hybrid YAML+.env loader)
-│   └── api/
-│       ├── IndodaxSignerLibrary.py       (HMAC-SHA512 signing)
-│       ├── indodax_signer.py             (core signing logic)
-│       ├── ApiSchemaValidator.py         (JSON schema validation)
-│       └── ResponseValidator.py          (HTTP status validation)
+│   ├── base/
+│   │   └── config_manager.py             (Hybrid YAML+.env loader)
+│   ├── api/
+│   │   ├── IndodaxSignerLibrary.py       (RF-callable HMAC-SHA512 library)
+│   │   ├── indodax_signer.py             (core signing logic)
+│   │   └── ResponseValidator.py          (HTTP status validation)
+│   ├── mobile/
+│   │   └── __init__.py                   (stub — reserved)
+│   └── web/
+│       └── __init__.py                   (stub — reserved)
 │
 ├── config/environments/
 │   ├── dev.yaml                          (non-secret, git-committed)
@@ -201,11 +204,14 @@ automation-framework/
 ├── test_data/
 │   ├── api/
 │   │   ├── base.json
-│   │   ├── indodax_public_api.json
-│   │   ├── indodax_private_api.json
-│   │   └── schemas/                      (JSON Schema files)
-│   └── web/
-│       └── indodax_usdtidr_market.json
+│   │   └── schemas/ 
+│   ├── web/
+│   └── mobile/
+│
+├── dictionary/
+│   ├── keyword_dictionary.robot          (auto-generated, 145 keywords)
+│   ├── keyword_report.txt                (duplicate report — 0 duplicates)
+│   └── generate_dictionary.py            (scanner + duplicate detector)
 │
 └── results/                              (robot output — gitignored)
     ├── report.html
@@ -215,7 +221,7 @@ automation-framework/
 
 ### 1. API Platform
 
-**Stack:** Robot Framework + RequestsLibrary + IndodaxSignerLibrary (HMAC-SHA512) + ApiSchemaValidator
+**Stack:** Robot Framework + RequestsLibrary + JSONLibrary + IndodaxSignerLibrary (HMAC-SHA512) + jsonschema
 
 ```robot
 *** Settings ***
@@ -325,17 +331,26 @@ class IndodaxUSDTIDRMarketPage:
 
 ---
 
-### 3. Mobile — Android Platform
+### 3. Mobile — Android & iOS Platform
 
-**Stack:** Robot Framework + AppiumLibrary + Page Object (keywords + locators split)
+**Stack:** Robot Framework + AppiumLibrary 3.2.1 + Appium 2.x + Page Object (keywords + locators split)
+
+| Layer | Android | iOS |
+|---|---|---|
+| Appium Driver | UIAutomator2 2.29.10 | XCUITest |
+| Page Objects | `page_objects/mobile/android/` | `page_objects/mobile/ios/` (same structure) |
+| App ID | `id.co.bitcoin.Bitcoin-Trading-Platform` | `id.co.bitcoin.Bitcoin-Trading-Platform` |
+
+A single test file runs on both platforms. The correct page object folder (`android/` or `ios/`) is loaded at runtime via the `${PLATFORM}` variable. Keywords sharing the same name across `android/` and `ios/` are **intentional platform overrides** — `generate_dictionary.py` excludes these from the duplicate report.
 
 ```robot
 *** Settings ***
 Library    AppiumLibrary
 Resource    ../../resources/keywords/mobile/mobile_settings.robot
-Resource    ../../resources/page_objects/mobile/home/home_keywords.robot
-Resource    ../../resources/page_objects/mobile/market/market_keywords.robot
-Resource    ../../resources/page_objects/mobile/trading/pro/trading_pro_keywords.robot
+Resource    ../../resources/keywords/mobile/mobile_test_data.robot
+Resource    ../../resources/page_objects/mobile/android/home/home_keywords.robot
+Resource    ../../resources/page_objects/mobile/android/market/market_keywords.robot
+Resource    ../../resources/page_objects/mobile/android/trading/pro/trading_pro_keywords.robot
 
 Test Tags    mobile    eth    search    positive_case    critical    regression
 
@@ -351,26 +366,27 @@ Mobile - Search ETH From Home
     ...    Acceptance Criteria:
     ...    - Search available, ETH/IDR pair found, trading page displays
 
+    Load ETH Test Data
     Navigate To Home
     Handle Onboarding If Present
     Navigate To Market
-    Search For Coin Pair    ETH
-    Select Search Result    ETH/IDR
-    Verify Trading Page Displayed    ETH
+    Search For Coin Pair    ${ETH_SEARCH_TERM}
+    Select Search Result    ${ETH_PAIR_NAME}
+    Verify Trading Page Displayed    ${ETH_PAIR_NAME}
 ```
 
-**Mobile Page Object pattern (locators different with keywords):**
+**Mobile Page Object pattern — per-screen split (keywords + locators):**
 
 ```robot
-# resources/page_objects/mobile/market/market_locators.robot
+# resources/page_objects/mobile/android/market/market_locators.robot
 *** Variables ***
 ${SEARCH_INPUT}        xpath=//android.widget.EditText[@resource-id="id.co.bitcoin:id/search_input"]
 ${SEARCH_RESULT_ETH}   xpath=//android.widget.TextView[@text="ETH/IDR"]
 
-# resources/page_objects/mobile/market/market_keywords.robot
+# resources/page_objects/mobile/android/market/market_keywords.robot
 *** Settings ***
 Resource    market_locators.robot
-Library    AppiumLibrary
+Library     AppiumLibrary
 
 *** Keywords ***
 Search For Coin Pair
@@ -379,27 +395,38 @@ Search For Coin Pair
     Input Text    ${SEARCH_INPUT}    ${search_term}
 ```
 
----
+**Platform keyword override — same keyword name, platform-specific locator:**
 
-### 4. Mobile — iOS Platform (Planned)
+```robot
+# resources/page_objects/mobile/android/market/market_keywords.robot
+Search For Coin Pair
+    [Arguments]    ${search_term}
+    Input Text    ${ANDROID_SEARCH_INPUT}    ${search_term}
 
-Same stack as Android (AppiumLibrary) with XCUITest driver and iOS-specific locators.
+# resources/page_objects/mobile/ios/market/market_keywords.robot
+Search For Coin Pair
+    [Arguments]    ${search_term}
+    Input Text    ${IOS_SEARCH_INPUT}    ${search_term}
+```
 
-**Planned YAML config (`mobile_production_ios.yaml`):**
+**Appium capabilities — per platform (defined in YAML):**
 
 ```yaml
-appium:
-  new_command_timeout: 60
+# mobile_production.yaml — Android
+capabilities:
+  platform_name: Android
+  automation_name: UiAutomator2
+  app_package: id.co.bitcoin.Bitcoin-Trading-Platform
+  no_reset: false
+
+# mobile_production.yaml — iOS (planned)
 capabilities:
   platform_name: iOS
   automation_name: XCUITest
-  bundle_id: id.co.bitcoin
+  bundle_id: id.co.bitcoin.Bitcoin-Trading-Platform
   no_reset: false
   auto_accept_alerts: true
 ```
-
-> **Current status:** Android (ASUS AI2302, Android 15) — PASS.  
-> iOS config and directory structure are ready; awaiting device availability.
 
 ---
 
@@ -586,11 +613,6 @@ robot --variable TEST_ENV:production tests/mobile/        # mobile production
 robot --variable TEST_ENV:production --include smoke --exclude skip tests/
 ```
 
-**Current coverage:**
-- API: Public ticker (Bitcoin, Ethereum), order book, trades — 5 test cases
-- Web: Market page load, market data — 2 test cases
-- Mobile: Search ETH — 1 test case
-
 ---
 
 ### 2. Regression Testing
@@ -603,12 +625,6 @@ robot --variable TEST_ENV:production --include smoke --exclude skip tests/
 ```bash
 robot --variable TEST_ENV:staging --exclude skip tests/
 ```
-
-**Current coverage (22 test cases):**
-- API Public: 7 test cases (ticker, order book, trades, server time, summaries)
-- API Private: 3 test cases (invalid auth, order history, trade history)
-- Web: 11 test cases (page load, market data, order book, price chart, trading interface)
-- Mobile: 1 test case (ETH search & validate)
 
 ---
 
@@ -640,16 +656,30 @@ robot --variable TEST_ENV:dev tests/mobile/search_and_validate_eth.robot
 ```
 CI/CD
   ├── Track 1: ubuntu-latest VM
-  │   ├── pip install -r requirements.txt
-  │   ├── robot tests/api/    
-  │   └── robot tests/web/    
+  │   ├── uv sync (install dependencies from pyproject.toml)
+  │   ├── pabot --processes 4 tests/api/    (parallel API execution)
+  │   └── robot tests/web/
   │
   └── Track 2: Self-Hosted Runner + Local Device Farm
-      ├── pip install -r requirements.txt
+      ├── uv sync
       ├── appium --port 4723 &
       ├── adb devices → Device ID (OS version)
-      └── robot tests/mobile/ 
+      └── robot tests/mobile/
 ```
+
+### 5. Parallel Execution with Pabot
+
+`robotframework-pabot` enables parallel execution of independent test suites, reducing total runtime for API + Web regressions.
+
+```bash
+# Run API tests in parallel (4 processes)
+pabot --processes 4 --variable TEST_ENV:staging tests/api/
+
+# Run web tests (single-browser, sequential)
+robot --variable TEST_ENV:production tests/web/
+```
+
+> ⚠️ Mobile tests are always sequential — one device per Appium session.
 
 ---
 
@@ -729,16 +759,140 @@ Private API - Authentication - Valid Credentials Should Succeed
 | Aspect | Actual Implementation |
 |---|---|
 | **Architecture** | 5-layer Clean Architecture (Tests → Keywords → Page Objects → Custom Libs → External Libs) |
-| **Framework Core** | Robot Framework 7.x / Python 3.13.3 |
-| **Web** | Browser Library (Playwright)  |
-| **API** | RequestsLibrary + HMAC-SHA512  |
-| **Android** | AppiumLibrary  |
-| **iOS** | AppiumLibrary  |
+| **Framework Core** | Robot Framework 7.4.1 / Python 3.13 / uv |
+| **Web** | Browser Library (Playwright) 19.0.0+ |
+| **API** | RequestsLibrary + JSONLibrary + HMAC-SHA512 |
+| **Android** | AppiumLibrary 3.2.1 + UIAutomator2 — ✅ PASS |
+| **iOS** | AppiumLibrary + XCUITest — ⏳ Pending (WDA code signing) |
+| **Parallel** | robotframework-pabot 5.2.2 |
 | **Config** | Hybrid: YAML (non-secret, committed) + .env (secret, gitignored) |
+| **Test Data** | JSON files + JSON Schema validation (jsonschema 4.0+) |
+| **Keyword Registry** | `dictionary/keyword_dictionary.robot` — 145 keywords, 0 duplicates |
 | **Tagging** | 5 dimensions: platform · execution · data type · priority · feature |
 | **Execution** | Smoke / Regression / Selective / CI/CD Two-Track |
 | **Error Handling** | Screenshot on failure · YAML-driven retry · Graceful skip |
 | **Reporting** | report.html · log.html · output.xml |
+
+---
+
+## Test Data Strategy
+
+### Structure
+
+All test data is stored as JSON files under `test_data/` and loaded at runtime — never hardcoded inside test cases or keyword files.
+
+```
+test_data/
+├── api/
+│   ├── base.json                     ← shared API metadata
+│   ├── indodax_public_api.json       ← public endpoint test data
+│   ├── indodax_private_api.json      ← private endpoint test data
+│   └── schemas/                      ← JSON Schema validation files
+│       ├── ticker_schema.json
+│       ├── depth_schema.json
+│       ├── trades_schema.json
+│       ├── account_info_schema.json
+│       ├── open_orders_schema.json
+│       ├── trade_response_schema.json
+│       └── error_schema.json
+├── web/
+│   └── indodax_usdtidr_market.json   ← market pairs + expected values
+└── mobile/
+    └── search_and_validate_eth.json  ← ETH search terms + expected results
+```
+
+### JSON Loading Pattern
+
+Test data is loaded using `JSONLibrary` with JSONPath expressions. `Get Value From Json` always returns a **list** — use `[0]` to get the first match.
+
+```robot
+# resources/keywords/web/web_test_data.robot
+Load Web Test Data
+    ${raw_json}=    Get File    ${CURDIR}/../../../test_data/web/indodax_usdtidr_market.json
+    ${WEB_TEST_DATA}=    Evaluate    json.loads($raw_json)    json
+    Set Suite Variable    ${WEB_TEST_DATA}
+
+Get Web Test Value
+    [Arguments]    ${json_path}
+    ${result}=    Get Value From Json    ${WEB_TEST_DATA}    ${json_path}
+    RETURN    ${result}[0]
+```
+
+**Iterating multiple market pairs (JSON-driven FOR loop):**
+
+```robot
+Web UI - Market Search Functionality
+    [Tags]    smoke    search    positive_case    critical
+    ${market_pairs}=    Get From Dictionary    ${WEB_TEST_DATA}    market_pairs
+    ${pair_ids}=    Get Dictionary Keys    ${market_pairs}    sort_keys=False
+    FOR    ${pair_id}    IN    @{pair_ids}
+        ${pair_data}=    Get From Dictionary    ${market_pairs}    ${pair_id}
+        ${search_term}=    Get From Dictionary    ${pair_data}    search_term
+        ${expected_result}=    Get From Dictionary    ${pair_data}    expected_result
+        Search Market By Pair Name    ${search_term}
+        Verify Search Result Contains Text    ${expected_result}
+    END
+```
+
+### JSON Schema Validation
+
+Schema files define the expected structure of API responses. Validation is performed using the `jsonschema` library — no custom `ApiSchemaValidator.py` exists; validation is done directly via the `Evaluate` keyword or a thin wrapper in `base_keywords.robot`.
+
+```robot
+Validate Ticker Response Schema
+    [Arguments]    ${response_body}
+    ${schema_path}=    Set Variable    ${CURDIR}/../../../test_data/api/schemas/ticker_schema.json
+    ${schema_raw}=     Get File        ${schema_path}
+    ${schema}=         Evaluate        json.loads($schema_raw)    json
+    Evaluate    jsonschema.validate($response_body, $schema)    jsonschema
+```
+
+---
+
+## Keyword Dictionary
+
+### Overview
+
+The keyword dictionary provides a centralized, searchable registry of all Robot Framework keywords defined across the entire project. It is **auto-generated** by a Python scanner script — never edited manually.
+
+| File | Purpose |
+|---|---|
+| `dictionary/keyword_dictionary.robot` | Auto-generated RF resource with all 145 keywords |
+| `dictionary/keyword_report.txt` | Duplicate detection report |
+| `dictionary/generate_dictionary.py` | Scanner + duplicate detector script |
+
+**Current state (as of v2.0):**
+
+```
+Total keywords : 145
+Duplicates     : 0
+```
+
+### How It Works
+
+`generate_dictionary.py` scans every `.robot` file in the project, extracts all `*** Keywords ***` definitions, and writes them into a single `keyword_dictionary.robot`. It also produces a `keyword_report.txt` flagging any duplicate names.
+
+**Cross-platform keyword exclusion logic:**
+
+Android and iOS page objects intentionally share the same keyword names (e.g., `Search For Coin Pair`) — this is by design, not a bug. The script detects this pattern and excludes these cross-platform pairs from the duplicate report:
+
+```python
+def is_mobile_android(path: str) -> bool:
+    return "page_objects/mobile/android" in path
+
+def is_mobile_ios(path: str) -> bool:
+    return "page_objects/mobile/ios" in path
+
+# In build_duplicate_map():
+# If keyword A is in android/ and keyword B is in ios/ → intentional override, skip
+```
+
+### Regenerating the Dictionary
+
+```bash
+cd automation-framework
+python dictionary/generate_dictionary.py
+```
 
 ---
 
@@ -747,4 +901,5 @@ Private API - Authentication - Valid Credentials Should Succeed
 | Version | Date | Changes |
 |---|---|---|
 | 1.0 | Feb 2026 | Initial architecture design |
+| 2.0 | Feb 2026 | Updated to reflect actual implementation: removed ApiSchemaValidator, added JSONLibrary / Pabot, corrected directory tree (mobile/android/ & ios/ structure), added mobile_test_data.robot, merged Android & iOS into single mobile section, added Test Data Strategy / Keyword Dictionary sections, runtime updated from venv to uv |
 

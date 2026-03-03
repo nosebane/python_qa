@@ -1,20 +1,16 @@
 *** Settings ***
-Documentation    Web automation keywords for Indodax market page
-...             Provides high-level keywords for interacting with market data
+Documentation       Web automation keywords for Indodax market page
+...                 Provides high-level keywords for interacting with market data
 
-Library    Browser
+Library             Browser
+Library             JSONLibrary
+Resource            ./indodax_usdtidr_market_page_locators.robot
 
-Resource    ./indodax_usdtidr_market_page_locators.robot
 
 *** Keywords ***
-
 Wait For Page Load
-    [Arguments]    ${pair}
     [Documentation]    Wait for market page to load completely
-    ...    
-    ...    Args:
-    ...        pair: Trading pair for verification
-    
+
     Log    Waiting for market page to load...    INFO
     # Wait for current price element to be visible (indicates page is loaded)
     Wait For Elements State    ${CURRENT_PRICE_LOCATOR}    visible    timeout=30s
@@ -22,7 +18,7 @@ Wait For Page Load
 
 Get Current Price
     [Documentation]    Get current trading price from page
-    
+
     Log    Retrieving current price    INFO
     ${price}=    Get Text    ${CURRENT_PRICE_LOCATOR}
     Log    Current price: ${price}    INFO
@@ -30,7 +26,7 @@ Get Current Price
 
 Get Price Change 24h
     [Documentation]    Get 24-hour price change
-    
+
     Log    Retrieving 24h price change    INFO
     ${change}=    Get Text    ${PRICE_CHANGE_24H_LOCATOR}
     Log    Price change: ${change}    INFO
@@ -38,7 +34,7 @@ Get Price Change 24h
 
 Get Volume 24h
     [Documentation]    Get 24-hour trading volume
-    
+
     Log    Retrieving 24h volume    INFO
     ${volume}=    Get Text    ${VOLUME_24H_LOCATOR}
     Log    24h volume: ${volume}    INFO
@@ -46,7 +42,7 @@ Get Volume 24h
 
 Get Bid Price
     [Documentation]    Get bid price from order book
-    
+
     Log    Retrieving bid price    INFO
     ${bid}=    Get Text    ${BID_PRICE_LOCATOR}
     Log    Bid price: ${bid}    INFO
@@ -54,7 +50,7 @@ Get Bid Price
 
 Get Ask Price
     [Documentation]    Get ask price from order book
-    
+
     Log    Retrieving ask price    INFO
     ${ask}=    Get Text    ${ASK_PRICE_LOCATOR}
     Log    Ask price: ${ask}    INFO
@@ -62,149 +58,150 @@ Get Ask Price
 
 Verify Market Data Available
     [Documentation]    Verify market data is available and not empty
-    
+
     Log    Verifying market data availability    INFO
-    
+
     ${price}=    Get Current Price
     Should Not Be Empty    ${price}    Current price is empty
-    
+
     ${change}=    Get Price Change 24h
     Should Not Be Empty    ${change}    Price change is empty
-    
+
     Log    ✓ Market data is available    INFO
 
 Get Trading Pair Header
     [Documentation]    Get the trading pair header/name
-    
+
     Log    Retrieving trading pair header    INFO
     ${header}=    Get Text    ${TRADING_PAIR_HEADER_LOCATOR}
     Log    Trading pair: ${header}    INFO
     RETURN    ${header}
 
 Verify Page Title Contains Pair
-    [Arguments]    ${pair}
-    [Documentation]    Verify page title contains the trading pair name
-    ...    
+    [Documentation]    Verify page title contains the expected pair text
+    ...
     ...    Args:
-    ...        pair: Expected trading pair
-    
-    Log    Verifying page title contains: ${pair}    INFO
+    ...        expected_text: Text expected to appear in the page title
+    [Arguments]    ${expected_text}
+
+    Log    Verifying page title contains: ${expected_text}    INFO
     ${title}=    Get Title
-    ${expected_text}=    Get From Dictionary    ${WEB_TEST_DATA}    page_title_expected
     Should Contain    ${title}    ${expected_text}    ignore_case=True
-    Log    ✓ Page title contains pair name    INFO
+    Log    ✓ Page title contains '${expected_text}'    INFO
 
 Wait For Price Updates
-    [Arguments]    ${timeout}=10s
     [Documentation]    Wait for price to update/change
-    ...    
+    ...
     ...    Args:
     ...        timeout: Maximum time to wait for update
-    
+    [Arguments]    ${timeout}=10s
+
     Log    Waiting for price updates (timeout: ${timeout})    INFO
     # Wait for price element to be enabled/interactive
     Wait For Elements State    ${CURRENT_PRICE_LOCATOR}    enabled    timeout=${timeout}
     Log    Page is responsive and interactive    INFO
 
 Get Market Data Dictionary
-    [Documentation]    Get all market data as dictionary from test data
-    
+    [Documentation]    Get market data for the current pair as a flat dictionary
+    ...    Reads from WEB_TEST_DATA via JSONPath $.market_data.usdtidr
+
     Log    Collecting market data from test data    INFO
-    
-    # Return WEB_TEST_DATA which contains merged market data and test expectations
-    ${market_data}=    Get Variable Value    ${WEB_TEST_DATA}    {}
-    
+
+    ${market_data_list}=    Get Value From Json    ${WEB_TEST_DATA}    $.market_data.usdtidr
+    ${market_data}=    Set Variable    ${market_data_list}[0]
+
     Log    Market data collected: ${market_data}    INFO
     RETURN    ${market_data}
 
 Verify Price Is Positive
     [Documentation]    Verify current price is a positive number
-    
+
     Log    Verifying price is positive    INFO
     ${price}=    Get Current Price
-    
+
     Should Not Be Empty    ${price}    Price is empty
     Log    ✓ Price is positive: ${price}    INFO
 
 Screenshot Market Page
-    [Arguments]    ${filename}=market_page
     [Documentation]    Take screenshot of market page
-    ...    
+    ...
     ...    Args:
     ...        filename: Filename for screenshot (without extension)
-    
+    [Arguments]    ${filename}=market_page
+
     Log    Taking screenshot: ${filename}.png    INFO
     Take Screenshot
     Log    Screenshot saved    INFO
 
 Scroll To Market Data
     [Documentation]    Scroll to ensure market data is in view
-    
+
     Log    Scrolling to market data    INFO
-    
+
     Log    Scrolled to top of page    INFO
 
 Navigate To Market Page
-    [Arguments]    ${base_url}    ${market_pair}
-    [Documentation]    Navigate to market page with robust error handling
-    ...    
+    [Documentation]    Navigate to market page, reads pair_id from WEB_TEST_DATA via JSONPath
     ...    Args:
     ...        base_url: Base URL of the website
-    ...        market_pair: Trading pair to navigate to
-    
-    Log    Navigating to market page: ${base_url}/market/${market_pair}    INFO
-    
-    ${url}=    Set Variable    ${base_url}/market/${market_pair}
-    
-    # Go to the URL - domcontentloaded waits for DOM but not all resources
-    Go To    ${url}    wait_until=domcontentloaded
-    
-    Log    Navigated to market page successfully    INFO
+    [Arguments]    ${base_url}
 
+    ${pair_id_list}=    Get Value From Json    ${WEB_TEST_DATA}    $.market_pairs.usdtidr.pair_id
+    ${pair_id}=    Set Variable    ${pair_id_list}[0]
+
+    Log    Navigating to market page: ${base_url}/market/${pair_id}    INFO
+
+    ${url}=    Set Variable    ${base_url}/market/${pair_id}
+    Go To    ${url}    wait_until=domcontentloaded
+
+    Log    Navigated to market page successfully    INFO
 
 Verify Page Is Responsive
     [Documentation]    Verify page is responsive and interactive
-    
+
     Log    Verifying page responsiveness    INFO
-    
+
     ${page_title}=    Get Title
     Should Not Be Empty    ${page_title}    Page is not responsive
-    
+
     Log    ✓ Page is responsive    INFO
 
 Search Market By Pair Name
-    [Arguments]    ${search_term}
     [Documentation]    Search for market pair by name in search box
-    ...    
+    ...
     ...    Args:
     ...        search_term: Trading pair name to search (e.g., BTC)
-    
+    [Arguments]    ${search_term}
+
     Log    Searching for market pair: ${search_term}    INFO
-    
+
     # Click on search box and enter search term
     Click    ${SEARCH_BOX_MARKET}
-    Fill Text    ${SEARCH_BOX_MARKET}    ${search_term}
-    
-    # Wait for search results table to be attached/rendered
+    Type Text    ${SEARCH_BOX_MARKET}    ${search_term}
+
+    # Wait for the search filter to be applied (attached confirms row is in DOM after filter runs)
     Wait For Elements State    ${FIRST_MARKET_SEARCH_RESULT}    attached    timeout=15s
-    
+
     Log    ✓ Searched for: ${search_term}    INFO
 
 Verify Search Result Contains Text
-    [Arguments]    ${expected_text}
-    [Documentation]    Verify first search result contains expected text
-    ...    
+    [Documentation]    Verify the first search result row contains expected text
+    ...
+    ...    Asserts the top result matches the expected pair — if the expected
+    ...    pair is not first, that is itself a UX failure worth catching.
+    ...
     ...    Args:
-    ...        expected_text: Expected text in search result (e.g., BTC/IDR)
-    
-    Log    Verifying search result contains: ${expected_text}    INFO
-    
-    # Get text from first search result
-    ${result_text}=    Get Text    ${FIRST_MARKET_SEARCH_RESULT}
-    
-    # Verify the text is present
-    Should Contain    ${result_text}    ${expected_text}    ignore_case=True
-    
-    Log    ✓ Search result contains: ${expected_text}    INFO
-    Log    Actual result: ${result_text}    INFO
-    RETURN    ${result_text}
+    ...        expected_text: Expected text in the first search result row (e.g., BTC/IDR)
+    [Arguments]    ${expected_text}
+
+    Log    Verifying first search result contains: ${expected_text}    INFO
+
+    # Assert the top result row contains the expected text
+    ${first_result}=    Get Text    ${FIRST_MARKET_SEARCH_RESULT}
+    ${first_lower}=     Convert To Lower Case    ${first_result}
+    ${expected_lower}=  Convert To Lower Case    ${expected_text}
+    Should Contain    ${first_lower}    ${expected_lower}
+    ...    msg=Expected '${expected_text}' not found in first search result: '${first_result}'
+
+    Log    ✓ First search result contains: ${expected_text}    INFO
+    RETURN    ${first_result}

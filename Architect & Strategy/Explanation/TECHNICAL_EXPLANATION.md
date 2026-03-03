@@ -90,10 +90,45 @@ Locator adalah bagian paling volatile dari test — berubah setiap kali develope
 Opsi memisahkan API, Web, dan Mobile ke repo berbeda memberikan isolasi yang lebih ketat, tapi dipilih monorepo karena:
 
 - **Shared config layer** — `config/environments/` dan `libraries/base/` dipakai oleh ketiga platform. Duplikasi di repo terpisah akan menciptakan drift (satu repo update, lainnya tidak)
-- **Satu versi requirements** — dependensi dikontrol dari satu `requirements.txt`
+- **Satu versi dependencies** — dependensi dikontrol dari satu `pyproject.toml` via `uv`, semua platform pakai environment yang sama (`uv sync` untuk install, `uv run` untuk eksekusi)
 - **Reporting terpadu** — `rebot` bisa merge output ketiga platform menjadi satu laporan
 
-**Cost yang diterima:** CI/CD harus lebih cerdas menentukan apa yang perlu dijalankan berdasarkan perubahan (perubahan di `tests/api/` tidak perlu trigger mobile run).
+**Cost yang diterima:** CI/CD harus lebih cerdas menentukan apa yang perlu dijalankan berdasarkan perubahan (perubahan di `tests/api/` tidak perlu trigger mobile run). Ini diimplementasikan via dua mekanisme:
+
+1. **Path filter di CI trigger** — job hanya berjalan saat file yang relevan berubah
+2. **Sparse checkout** — hanya folder yang dibutuhkan yang di-checkout, termasuk shared layer:
+
+```
+# Web test checkout:
+automation-framework/tests/web/
+automation-framework/resources/keywords/web/
+automation-framework/resources/page_objects/web/
+automation-framework/test_data/web/
+automation-framework/libraries/base/        ← shared, wajib ikut
+automation-framework/config/environments/   ← shared, wajib ikut
+pyproject.toml + uv.lock                   ← shared, wajib ikut
+
+# API test checkout:
+automation-framework/tests/api/
+automation-framework/resources/keywords/api/
+automation-framework/test_data/api/
+automation-framework/libraries/base/        ← shared, wajib ikut
+automation-framework/libraries/api/         ← API-specific
+automation-framework/config/environments/   ← shared, wajib ikut
+pyproject.toml + uv.lock                   ← shared, wajib ikut
+
+# Mobile test checkout:
+automation-framework/tests/mobile/
+automation-framework/resources/keywords/mobile/
+automation-framework/resources/page_objects/mobile/
+automation-framework/test_data/mobile/
+automation-framework/libraries/base/        ← shared, wajib ikut
+automation-framework/libraries/mobile/      ← mobile-specific
+automation-framework/config/environments/   ← shared, wajib ikut
+pyproject.toml + uv.lock                   ← shared, wajib ikut
+```
+
+Sparse checkout baru worth diterapkan saat ukuran repo sudah besar (>500MB). Untuk saat ini, path filter di CI trigger sudah cukup — checkout full repo hanya butuh beberapa detik.
 
 ---
 
@@ -185,8 +220,16 @@ Saat jumlah test bertambah, dua mekanisme sudah tersedia tanpa refactor:
 
 **Selective execution via tag:**
 ```bash
+# OR filter — salah satu tag match sudah cukup
+robot --include smoke tests/
+robot --include smoke --include critical tests/
+
+# AND filter — semua tag harus match (gunakan AND tanpa spasi)
+robot --include smokeANDcritical tests/
+robot --include apiANDpositive_case tests/
+
+# Exclude
 robot --include smoke --exclude skip tests/
-robot --include critical tests/api/
 ```
 
 **Parallelisasi via pabot:**
@@ -272,3 +315,8 @@ Setiap test failure menghasilkan tiga artefak otomatis:
 | `results/output.xml` | Data mentah untuk integrasi CI/CD |
 
 Dengan screenshot yang hanya diambil saat failure, engineer bisa mendiagnosis masalah tanpa perlu menjalankan ulang test dan "menunggu" error muncul kembali.
+
+## What Could be Improve
+### 1. Report Plugin for more robust reporting and logging
+### 2. Integration with Test Management tool
+### 3. BDD Implementation 

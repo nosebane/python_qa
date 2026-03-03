@@ -27,10 +27,6 @@ class ConfigManager:
     3. ConfigManager loads .env first, then resolves YAML variables
     """
     
-    # Cache for loaded configurations
-    _config_cache: Dict[str, Any] = {}
-    _env_loaded: Dict[str, bool] = {}
-    
     def __init__(self, config_dir: Optional[Path] = None, env_file: Optional[str] = None):
         """
         Initialize Config Manager
@@ -41,6 +37,10 @@ class ConfigManager:
             env_file: .env file to load (e.g., '.env.dev', '.env.staging')
                      If None, loads from TEST_ENV variable or .env.dev
         """
+        # Instance-level cache — isolated per ConfigManager instance (safe for parallel/pabot)
+        self._config_cache: Dict[str, Any] = {}
+        self._env_loaded: Dict[str, bool] = {}
+
         if config_dir is None:
             # __file__ = automation-framework/libraries/base/config_manager.py
             # .parent   = automation-framework/libraries/base/
@@ -69,14 +69,16 @@ class ConfigManager:
         
         self.logger.info(f"ConfigManager initialized with config_dir: {self.config_dir}")
     
-    def _load_env_file(self, env_file: str) -> None:
+    def _load_env_file(self, env_file: str, force_reload: bool = False) -> None:
         """
         Load environment variables from .env file
         
         Args:
             env_file: .env filename (e.g., '.env.dev', '.env.staging')
+            force_reload: If True, re-read the file even if previously loaded.
+                         Useful when .env changes mid-run or in test isolation.
         """
-        if env_file in self._env_loaded:
+        if env_file in self._env_loaded and not force_reload:
             return
         
         env_path = self.base_dir / env_file

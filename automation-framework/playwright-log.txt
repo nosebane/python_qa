@@ -1,0 +1,522 @@
+{"level":30,"time":"2026-02-27T03:37:22.186Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Listening on 127.0.0.1:58023"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:37:23.233Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:23.234Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:23.242Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:27.606Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:37:27.606Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:37:27.606Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:27.611Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:27.611Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@695c766eafa3c25b7349f90eeb94d582\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=2bd91c83-3458-4323-b377-27b7a39403b0\"}"}
+{"level":30,"time":"2026-02-27T03:37:27.620Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=c2b2515f-0f4f-4d19-88f2-7c0eb0cb01a9 to 90000"}
+{"level":30,"time":"2026-02-27T03:37:27.620Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=c2b2515f-0f4f-4d19-88f2-7c0eb0cb01a9"}
+{"level":30,"time":"2026-02-27T03:37:27.803Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:37:27.804Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:37:27.818Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:27.861Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:29.951Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:29.959Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:29.960Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:35.172Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:35.427Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:37:35.455Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=8bae0fd0-5099-4c69-a5f7-638dc8dae5a8 from context=c2b2515f-0f4f-4d19-88f2-7c0eb0cb01a9 page stack"}
+{"level":30,"time":"2026-02-27T03:37:35.557Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:37:35.566Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:35.566Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:35.569Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:35.569Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:35.573Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:35.890Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:37:35.890Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:37:35.890Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:35.895Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:35.895Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@6e5aa025c9e3748f166d7f8e54702279\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=1655f400-64f7-42bd-8afa-268c5c7ab2a4\"}"}
+{"level":30,"time":"2026-02-27T03:37:35.900Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=1f79f147-eba7-4fc9-aa22-856a315ba281 to 90000"}
+{"level":30,"time":"2026-02-27T03:37:35.900Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=1f79f147-eba7-4fc9-aa22-856a315ba281"}
+{"level":30,"time":"2026-02-27T03:37:36.001Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:37:36.001Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:37:36.007Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:36.046Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:37.726Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:37.736Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:37.737Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:42.395Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:42.405Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:42.406Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:43.164Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_usdtidr_val[data-sort] containing 16.783"}
+{"level":30,"time":"2026-02-27T03:37:43.164Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.171Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.171Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_change_usdtidr in page."}
+{"level":30,"time":"2026-02-27T03:37:43.223Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_change_usdtidr containing  +0.12%"}
+{"level":30,"time":"2026-02-27T03:37:43.223Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.235Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.235Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:43.332Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_usdtidr_val[data-sort] containing 16.783"}
+{"level":30,"time":"2026-02-27T03:37:43.332Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.340Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.340Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_change_usdtidr in page."}
+{"level":30,"time":"2026-02-27T03:37:43.438Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_change_usdtidr containing  +0.12%"}
+{"level":30,"time":"2026-02-27T03:37:43.438Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.445Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.445Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.vol_val in page."}
+{"level":30,"time":"2026-02-27T03:37:43.473Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.vol_val containing 5.754.017,5"}
+{"level":30,"time":"2026-02-27T03:37:43.474Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:43.487Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:37:43.496Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=c0f0a2c6-dede-4d2c-8ce9-c6d9539ceb3b from context=1f79f147-eba7-4fc9-aa22-856a315ba281 page stack"}
+{"level":30,"time":"2026-02-27T03:37:43.611Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:37:43.619Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:43.619Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:43.622Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:43.622Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:43.627Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:43.927Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:37:43.927Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:37:43.928Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:43.934Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:43.934Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@a868cb9af31913c7529ac96ef61a3ded\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=61d10263-731f-4bc8-8ebc-29a3ad0de696\"}"}
+{"level":30,"time":"2026-02-27T03:37:43.939Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=cbda1cf4-256b-48f0-b121-7287f681c234 to 90000"}
+{"level":30,"time":"2026-02-27T03:37:43.939Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=cbda1cf4-256b-48f0-b121-7287f681c234"}
+{"level":30,"time":"2026-02-27T03:37:44.038Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:37:44.038Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:37:44.047Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:44.087Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:45.796Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:45.841Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:45.841Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:50.027Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:50.035Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:50.035Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:51.113Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_usdtidr_val[data-sort] containing 16.783"}
+{"level":30,"time":"2026-02-27T03:37:51.113Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:51.123Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:51.123Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:37:51.262Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_usdtidr_val[data-sort] containing 16.783"}
+{"level":30,"time":"2026-02-27T03:37:51.262Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:37:51.274Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:37:51.282Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=2e4fd1e7-1745-4ff7-a27f-2e6d6827999d from context=cbda1cf4-256b-48f0-b121-7287f681c234 page stack"}
+{"level":30,"time":"2026-02-27T03:37:51.378Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:37:51.388Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:51.388Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:51.392Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:51.392Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:37:51.399Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:51.717Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:37:51.718Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:37:51.718Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:37:51.723Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:51.723Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@ec68b547ede16f7c0ca8787c22c34eae\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=a3be43c1-387f-47f4-9156-e2c64130ef83\"}"}
+{"level":30,"time":"2026-02-27T03:37:51.728Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=b4695ba5-9ef4-4555-ac0b-b8c98e63e20e to 90000"}
+{"level":30,"time":"2026-02-27T03:37:51.728Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=b4695ba5-9ef4-4555-ac0b-b8c98e63e20e"}
+{"level":30,"time":"2026-02-27T03:37:51.838Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:37:51.838Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:37:51.845Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:37:51.890Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:53.880Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:37:53.891Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:37:53.891Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:00.716Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:00.725Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:00.725Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=h1 in page."}
+{"level":30,"time":"2026-02-27T03:38:02.724Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=h1 containing USDT to IDR"}
+{"level":30,"time":"2026-02-27T03:38:02.724Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:02.752Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:02.757Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=e3129dc7-d335-4981-a938-b7d0a3bb6f56 from context=b4695ba5-9ef4-4555-ac0b-b8c98e63e20e page stack"}
+{"level":30,"time":"2026-02-27T03:38:02.870Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:02.882Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:02.882Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:02.889Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:02.889Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:02.896Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:03.310Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:03.311Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:03.311Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:03.318Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:03.318Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@7fbd12bcd305490b0a14c6f3c0f98c4e\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=4ca9c739-9681-42bf-ba7d-e0af32c3442d\"}"}
+{"level":30,"time":"2026-02-27T03:38:03.323Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=e1ac0e41-4486-4697-8752-6213c93f425b to 90000"}
+{"level":30,"time":"2026-02-27T03:38:03.323Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=e1ac0e41-4486-4697-8752-6213c93f425b"}
+{"level":30,"time":"2026-02-27T03:38:03.454Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:03.454Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:03.462Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:03.514Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:05.334Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:05.343Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:05.343Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:10.430Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:10.600Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:10.607Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=47fa4d8a-0d62-42c4-9073-8424708cc790 from context=e1ac0e41-4486-4697-8752-6213c93f425b page stack"}
+{"level":30,"time":"2026-02-27T03:38:10.779Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:10.791Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:10.792Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:10.796Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:10.796Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:10.807Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:11.227Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:11.227Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:11.227Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:11.232Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:11.232Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@e577e2a31044be34a75f96b34d250f66\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=d1e58812-dbf5-4e16-acfc-0b182df421fe\"}"}
+{"level":30,"time":"2026-02-27T03:38:11.236Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=b17b9486-2a35-4bd4-b6a2-7933f8876560 to 90000"}
+{"level":30,"time":"2026-02-27T03:38:11.236Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=b17b9486-2a35-4bd4-b6a2-7933f8876560"}
+{"level":30,"time":"2026-02-27T03:38:11.343Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:11.343Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:11.351Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:11.397Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:13.684Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:13.695Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:13.695Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:19.539Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:19.642Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:19.647Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_change_usdtidr in page."}
+{"level":30,"time":"2026-02-27T03:38:20.928Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.price_change_usdtidr containing  +0.14%"}
+{"level":30,"time":"2026-02-27T03:38:20.928Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:20.944Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:20.952Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=a68e0035-fb15-45f4-9836-bf3db06fda72 from context=b17b9486-2a35-4bd4-b6a2-7933f8876560 page stack"}
+{"level":30,"time":"2026-02-27T03:38:21.064Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:21.072Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:21.072Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:21.074Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:21.074Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:21.079Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:21.392Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:21.392Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:21.393Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:21.403Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:21.403Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@24bf536ca4be0cb98d4747cd0c4fd9fe\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=27aa10d0-83cd-4eca-b818-45045b1bc6dc\"}"}
+{"level":30,"time":"2026-02-27T03:38:21.409Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=14aa0ddf-3c01-4095-90ef-41d9500157fc to 90000"}
+{"level":30,"time":"2026-02-27T03:38:21.409Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=14aa0ddf-3c01-4095-90ef-41d9500157fc"}
+{"level":30,"time":"2026-02-27T03:38:21.544Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:21.545Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:21.556Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:21.611Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:23.988Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:24.003Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:24.003Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:28.967Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:28.979Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:28.979Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.vol_val in page."}
+{"level":30,"time":"2026-02-27T03:38:30.026Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=strong.vol_val containing 5.754.933,4"}
+{"level":30,"time":"2026-02-27T03:38:30.026Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:30.040Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:30.052Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=73527e65-78c1-4e74-ae34-187bc03a31aa from context=14aa0ddf-3c01-4095-90ef-41d9500157fc page stack"}
+{"level":30,"time":"2026-02-27T03:38:30.157Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:30.165Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:30.165Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:30.169Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:30.169Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:30.174Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:30.496Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:30.496Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:30.496Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:30.503Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:30.503Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@c6ac569ae69f7f27d2326dd3cf17a629\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=d5f7c13d-827e-4d05-9881-0227372f3e05\"}"}
+{"level":30,"time":"2026-02-27T03:38:30.507Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=eeceb1f3-cd8a-45fe-98cd-f2ee13792eb4 to 90000"}
+{"level":30,"time":"2026-02-27T03:38:30.508Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=eeceb1f3-cd8a-45fe-98cd-f2ee13792eb4"}
+{"level":30,"time":"2026-02-27T03:38:30.628Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:30.628Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:30.636Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:30.680Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:32.529Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:32.561Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:32.561Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:37.875Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:37.892Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:37.892Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#buy_orders tbody tr:first-child td:first-child in page."}
+{"level":30,"time":"2026-02-27T03:38:38.647Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=#buy_orders tbody tr:first-child td:first-child containing 16.782"}
+{"level":30,"time":"2026-02-27T03:38:38.647Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:38.656Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:38.656Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#sell_orders tbody tr:first-child td:first-child in page."}
+{"level":30,"time":"2026-02-27T03:38:38.710Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=#sell_orders tbody tr:first-child td:first-child containing 16.783"}
+{"level":30,"time":"2026-02-27T03:38:38.710Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:38:38.724Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:38.731Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=556932f5-95ce-4bcf-918e-6304562084c9 from context=eeceb1f3-cd8a-45fe-98cd-f2ee13792eb4 page stack"}
+{"level":30,"time":"2026-02-27T03:38:38.824Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:38.832Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:38.833Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:38.838Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:38.838Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:38.845Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:39.134Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:39.134Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:39.134Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:39.142Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:39.142Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@211b05ed92971b4b66cabf386dd874a7\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=b308560a-933c-469a-acd2-25fb39d2e29a\"}"}
+{"level":30,"time":"2026-02-27T03:38:39.147Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=3d023386-5f83-49e6-9e2d-9086b0f450e1 to 90000"}
+{"level":30,"time":"2026-02-27T03:38:39.148Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=3d023386-5f83-49e6-9e2d-9086b0f450e1"}
+{"level":30,"time":"2026-02-27T03:38:39.262Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:39.262Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:39.269Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:39.309Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:41.248Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:41.274Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:41.274Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:46.351Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:46.397Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method takeScreenshot"}
+{"level":30,"time":"2026-02-27T03:38:46.397Z","pid":24518,"hostname":"NosebaneMacBookPro.local","Take screenshot with options: ":{"path":"/Users/ikhsandwidanu/Documents/GitHub/python_qa/automation-framework/browser/screenshot/robotframework-browser-screenshot-1.png","fileType":"png","fullPage":false,"timeout":90000,"omitBackground":false}}
+{"level":30,"time":"2026-02-27T03:38:47.295Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method takeScreenshot"}
+{"level":30,"time":"2026-02-27T03:38:47.306Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:47.312Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=547f19f7-ab9e-4a0b-b023-f6fb4ccbc35c from context=3d023386-5f83-49e6-9e2d-9086b0f450e1 page stack"}
+{"level":30,"time":"2026-02-27T03:38:47.404Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:47.413Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:47.413Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:47.417Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:47.417Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:47.423Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:47.778Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:47.778Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:47.778Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:47.784Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:47.785Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@8af96c6e43f9f983fed6878ac2aac346\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=bc2a6b20-f837-4b11-8c78-816acf93d0d3\"}"}
+{"level":30,"time":"2026-02-27T03:38:47.790Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=c786b165-fef6-4386-8c0d-f81ad1c9743f to 90000"}
+{"level":30,"time":"2026-02-27T03:38:47.790Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=c786b165-fef6-4386-8c0d-f81ad1c9743f"}
+{"level":30,"time":"2026-02-27T03:38:47.922Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:47.922Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:47.931Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:47.979Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:50.168Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:50.189Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:50.189Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:55.263Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:55.504Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:55.504Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:38:55.872Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:55.906Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:38:55.917Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=717d8ac4-44c7-4683-afbd-5f22919b810c from context=c786b165-fef6-4386-8c0d-f81ad1c9743f page stack"}
+{"level":30,"time":"2026-02-27T03:38:56.014Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:38:56.021Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:56.021Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:56.024Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:56.024Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:38:56.031Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:56.330Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding browser to stack: chromium, version: 145.0.7632.6"}
+{"level":30,"time":"2026-02-27T03:38:56.331Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Adding 0 contexts to browser"}
+{"level":30,"time":"2026-02-27T03:38:56.331Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newBrowser"}
+{"level":30,"time":"2026-02-27T03:38:56.337Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:56.337Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"currentBrowser: {\"name\":\"chromium\",\"browser\":{\"_type\":\"Browser\",\"_guid\":\"browser@2656db512c306b62ea10d9b7edf03b71\"},\"headless\":true,\"_contextStack\":[],\"id\":\"browser=a32f4164-35a9-4dd7-bb1e-dddd8589e702\"}"}
+{"level":30,"time":"2026-02-27T03:38:56.342Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Setting default timeout for context context=9f2eca07-494e-43bc-9b3d-97b8c364bbc7 to 90000"}
+{"level":30,"time":"2026-02-27T03:38:56.342Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active context: context=9f2eca07-494e-43bc-9b3d-97b8c364bbc7"}
+{"level":30,"time":"2026-02-27T03:38:56.468Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Video path: undefined"}
+{"level":30,"time":"2026-02-27T03:38:56.468Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Changed active page"}
+{"level":30,"time":"2026-02-27T03:38:56.479Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method newPage"}
+{"level":30,"time":"2026-02-27T03:38:56.533Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:59.172Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method goTo"}
+{"level":30,"time":"2026-02-27T03:38:59.194Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:38:59.194Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=strong.price_usdtidr_val[data-sort] in page."}
+{"level":30,"time":"2026-02-27T03:39:03.595Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:03.773Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-27T03:39:03.774Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#searchbox_market in page."}
+{"level":30,"time":"2026-02-27T03:39:05.116Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-27T03:39:05.123Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method typeText"}
+{"level":30,"time":"2026-02-27T03:39:05.123Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#searchbox_market in page."}
+{"level":30,"time":"2026-02-27T03:39:06.747Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method typeText"}
+{"level":30,"time":"2026-02-27T03:39:06.759Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:06.759Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] in page."}
+{"level":30,"time":"2026-02-27T03:39:06.814Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:06.825Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:39:06.825Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] in page."}
+{"level":30,"time":"2026-02-27T03:39:06.864Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] containing \n                                                        USDT/IDR                                                                                                            "}
+{"level":30,"time":"2026-02-27T03:39:06.864Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:39:06.939Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-27T03:39:06.939Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#searchbox_market in page."}
+{"level":30,"time":"2026-02-27T03:39:06.994Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-27T03:39:06.998Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method typeText"}
+{"level":30,"time":"2026-02-27T03:39:06.998Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#searchbox_market in page."}
+{"level":30,"time":"2026-02-27T03:39:07.887Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method typeText"}
+{"level":30,"time":"2026-02-27T03:39:07.893Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:07.893Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] in page."}
+{"level":30,"time":"2026-02-27T03:39:07.931Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:07.941Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:39:07.941Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] in page."}
+{"level":30,"time":"2026-02-27T03:39:07.960Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] containing \n                                                        BTC/IDR                                                                                                            "}
+{"level":30,"time":"2026-02-27T03:39:07.960Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:39:08.039Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method click"}
+{"level":30,"time":"2026-02-27T03:39:08.040Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#searchbox_market in page."}
+{"level":30,"time":"2026-02-27T03:39:08.121Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method click"}
+{"level":30,"time":"2026-02-27T03:39:08.125Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method typeText"}
+{"level":30,"time":"2026-02-27T03:39:08.125Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#searchbox_market in page."}
+{"level":30,"time":"2026-02-27T03:39:09.078Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method typeText"}
+{"level":30,"time":"2026-02-27T03:39:09.085Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:09.085Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] in page."}
+{"level":30,"time":"2026-02-27T03:39:09.172Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method waitForElementState"}
+{"level":30,"time":"2026-02-27T03:39:09.211Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getText"}
+{"level":30,"time":"2026-02-27T03:39:09.212Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Strict mode is enabled, find Locator with css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] in page."}
+{"level":30,"time":"2026-02-27T03:39:09.233Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Retrieved text for element css=#marketbox-table-all tr[class*=\"market-row\"]:first-child td[data-search] containing \n                                                        ETH/IDR                                                                                                            "}
+{"level":30,"time":"2026-02-27T03:39:09.233Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getText"}
+{"level":30,"time":"2026-02-27T03:39:09.251Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:39:09.265Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Removed page=cfe34646-d302-4eae-a95d-79682806c924 from context=9f2eca07-494e-43bc-9b3d-97b8c364bbc7 page stack"}
+{"level":30,"time":"2026-02-27T03:39:09.413Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:39:09.425Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:39:09.425Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:39:09.436Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeBrowser"}
+{"level":30,"time":"2026-02-27T03:39:09.436Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeBrowser"}
+================= Original suppressed error =================
+Error: Browser has been closed.
+    at PlaywrightState.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:12672:15)
+    at PlaywrightServer.getActiveBrowser (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13622:59)
+    at PlaywrightServer.setTimeout (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/index.js:13873:57)
+    at Object.onReceiveHalfClose (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server.js:1464:25)
+    at BaseServerInterceptingCall.maybePushNextMessage (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:595:31)
+    at BaseServerInterceptingCall.handleEndEvent (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:635:14)
+    at ServerHttp2Stream.<anonymous> (/Users/ikhsandwidanu/Documents/GitHub/python_qa/.venv/lib/python3.13/site-packages/Browser/wrapper/node_modules/@grpc/grpc-js/build/src/server-interceptors.js:394:18)
+    at ServerHttp2Stream.emit (node:events:520:35)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)
+=============================================================
+{"level":30,"time":"2026-02-27T03:39:09.450Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:39:09.450Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method getBrowserCatalog"}
+{"level":30,"time":"2026-02-27T03:39:09.840Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"Start of node method closeAllBrowsers"}
+{"level":30,"time":"2026-02-27T03:39:09.841Z","pid":24518,"hostname":"NosebaneMacBookPro.local","msg":"End of node method closeAllBrowsers"}
