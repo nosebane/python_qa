@@ -84,3 +84,25 @@ Validate ETH Page Is Displayed
     END
 
     Log    ✓ ETH/IDR trading page validated successfully    INFO
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BDD STEP KEYWORDS — Trading PRO Page
+# RF strips the Given/When/Then/And prefix before keyword lookup.
+# e.g. "Then the ETH/IDR trading page should be fully loaded"
+#   → "The ETH/IDR Trading Page Should Be Fully Loaded"
+# ─────────────────────────────────────────────────────────────────────────────
+
+The ETH/IDR Trading Page Should Be Fully Loaded
+    [Documentation]    BDD Then: wait for the ETH trading page to finish loading.
+
+    Wait For ETH Page Load
+    Capture Page Screenshot    filename=${SCREENSHOT_TRADING_PAGE}
+    Log    ✓ ETH/IDR trading page is fully loaded    INFO
+
+The ETH/IDR Trading Page Should Display Correctly
+    [Documentation]    BDD And: assert the ETH/IDR trading page content is correctly displayed.
+
+    Validate ETH Page Is Displayed
+    Log    ✓ ETH/IDR trading page displayed correctly    INFO
+

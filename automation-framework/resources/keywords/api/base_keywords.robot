@@ -266,3 +266,31 @@ Validate Error Response Using Config
     END
 
     RETURN    ${body}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BDD STEP KEYWORDS — Shared HTTP Response Steps
+# RF strips the Given/When/Then/And prefix before keyword lookup.
+# e.g. "Then the response should be 200 OK" → "The Response Should Be 200 OK"
+# ─────────────────────────────────────────────────────────────────────────────
+
+The Response Should Be 200 OK
+    [Documentation]    BDD Then: verify HTTP 200 and parse body into ${RESPONSE_BODY} test variable.
+
+    ${body}=    Verify Response Status Code OK    ${CURRENT_RESPONSE}
+    Set Test Variable    ${RESPONSE_BODY}    ${body}
+    Log    ✓ Response is 200 OK    INFO
+
+The Response Should Contain An Error Field
+    [Documentation]    BDD Then/And: assert response body contains the 'error' key.
+
+    Should Contain    ${RESPONSE_BODY}    error
+    Log    ✓ Response contains error field    INFO
+
+The Response Should Be A Valid Dictionary
+    [Documentation]    BDD And: assert response body is a non-empty dictionary.
+
+    ${is_dict}=    Run Keyword And Return Status    Should Be True    isinstance(${RESPONSE_BODY}, dict)
+    Should Be True    ${is_dict}    Response should be a dictionary
+    Log    ✓ Response is a valid dictionary    INFO
+

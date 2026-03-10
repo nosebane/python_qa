@@ -319,4 +319,3 @@ Dengan screenshot yang hanya diambil saat failure, engineer bisa mendiagnosis ma
 ## What Could be Improve
 ### 1. Report Plugin for more robust reporting and logging
 ### 2. Integration with Test Management tool
-### 3. BDD Implementation 

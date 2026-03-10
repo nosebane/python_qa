@@ -282,3 +282,44 @@ Click ETH IDR Result
     END
 
     Fail    Could not find and click ETH/IDR result
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BDD STEP KEYWORDS — Market Search
+# RF strips the Given/When/Then/And prefix before keyword lookup.
+# e.g. "Given the app is on the market page" → "The App Is On The Market Page"
+# ─────────────────────────────────────────────────────────────────────────────
+
+The App Is On The Market Page
+    [Documentation]    BDD Given: navigate to the Market page.
+
+    Navigate To Market
+    Capture Page Screenshot    filename=${SCREENSHOT_ONBOARDING}
+    Log    ✓ App is on the Market page    INFO
+
+The Search Functionality Is Available
+    [Documentation]    BDD And: assert search container is visible on the Market page.
+
+    Wait Until Page Contains Element    ${SEARCH_CONTAINER}    timeout=10s
+    Capture Page Screenshot    filename=${SCREENSHOT_MARKET_CLICK}
+    Log    ✓ Search functionality is available    INFO
+
+The User Searches For The Configured Cryptocurrency
+    [Documentation]    BDD When: enter the configured search term (${SEARCH_TERM}) into the search box.
+
+    Search For Cryptocurrency    ${SEARCH_TERM}
+    Log    ✓ Search for '${SEARCH_TERM}' completed    INFO
+
+The Expected Pair Should Appear In The Search Results
+    [Documentation]    BDD Then: assert ${EXPECTED_PAIR} is visible in the search results.
+
+    Wait Until Page Contains    ${EXPECTED_PAIR}    timeout=${SEARCH_RESULT_TIMEOUT}
+    Capture Page Screenshot    filename=${SCREENSHOT_SEARCH_RESULTS}
+    Log    ✓ '${EXPECTED_PAIR}' found in search results    INFO
+
+The User Selects The ETH/IDR Result
+    [Documentation]    BDD When: tap on the ETH/IDR entry in the search result list.
+
+    Click ETH IDR Result
+    Log    ✓ ETH/IDR result selected    INFO
+

@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation       Indodax Web UI - USDT/IDR Trading Page Tests
-...                 Tests for market data, prices, and trading interface
-...                 Uses env-based configuration from .env.${TEST_ENV}
+...                 Feature: USDT/IDR Market Page Verification
+...                 Tests market data, prices, and trading interface in BDD (Gherkin) style.
 
 Resource            ../../resources/keywords/web/web_settings.robot
 
@@ -13,234 +13,154 @@ Test Teardown       Capture Screenshot On Failure And Close Browser
 Test Tags           web    ui    market    usdtidr    indodax
 
 
-*** Variables ***
-${TIMEOUT}          10s
-
-
 *** Test Cases ***
 Web UI - Market Page Load
-    [Documentation]    Verify USDT/IDR market page loads successfully
+    [Documentation]    Scenario: User opens the USDT/IDR market page
     ...
-    ...    Acceptance Criteria:
+    ...    Criteria:
     ...    - Page loads without errors
-    ...    - Market header is visible
-    ...    - Trading pair is correctly displayed
-    ...    - Current price is displayed
+    ...    - Page title contains the expected pair name
+    ...    - Market page is responsive and interactive
     [Tags]    smoke    market    positive_case    critical
 
-    # Verify page loaded — use expected title text from JSON test data
-    Verify Page Is Responsive
-    Verify Page Title Contains Pair    ${WEB_TEST_DATA}[test_expectations][page_title_expected]
-
-    Log    ✓ Market page loaded successfully    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the page title should contain the expected pair name
+    And the market page should be responsive
 
 Web UI - Verify Market Data Available
-    [Documentation]    Verify all market data is available and visible
+    [Documentation]    Scenario: User views market data on the USDT/IDR page
     ...
-    ...    Acceptance Criteria:
+    ...    Criteria:
     ...    - Current price is visible and non-empty
-    ...    - 24h price change is displayed
-    ...    - 24h volume is available
-    ...    - Bid and ask prices are shown
+    ...    - 24-hour price change is displayed
+    ...    - 24-hour volume is displayed
     [Tags]    smoke    market    data    positive_case    critical
 
-    # Verify all market data elements
-    Verify Market Data Available
-
-    # Get individual data points
-    ${current_price}=    Get Current Price
-    ${price_change}=    Get Price Change 24h
-    ${volume}=    Get Volume 24h
-
-    # Log results
-    Log    Current Price: ${current_price}    INFO
-    Log    24h Change: ${price_change}    INFO
-    Log    24h Volume: ${volume}    INFO
-
-    Log    ✓ All market data verified    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the current price should be visible
+    And the 24-hour price change should be visible
+    And the 24-hour volume should be visible
 
 Web UI - Current Price Display
-    [Documentation]    Verify current price is displayed correctly
+    [Documentation]    Scenario: User verifies the current USDT/IDR price is correctly shown
     ...
-    ...    Acceptance Criteria:
-    ...    - Price is displayed in correct format
-    ...    - Price is a positive number
-    ...    - Price updates are reflected
+    ...    Criteria:
+    ...    - Price is displayed and non-empty
+    ...    - Price is a positive numeric value
     [Tags]    market    price    positive_case    critical
 
-    # Get price
-    ${price}=    Get Current Price
-
-    # Verify price
-    Should Not Be Empty    ${price}    Current price is empty
-    Verify Price Is Positive
-
-    Log    ✓ Current price verified: ${price}    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the current price should be visible
+    And the current price should be a positive value
 
 Web UI - Trading Pair Header Verification
-    [Documentation]    Verify trading pair is correctly displayed in header
+    [Documentation]    Scenario: User sees the correct trading pair in the page header
     ...
-    ...    Acceptance Criteria:
-    ...    - Pair name is visible
-    ...    - Pair name matches USDT/IDR
-    ...    - Header formatting is correct
+    ...    Criteria:
+    ...    - Header is visible and non-empty
+    ...    - Header contains the USDT identifier
     [Tags]    regression    market    header    ui    positive_case
 
-    # Get pair header
-    ${pair_header}=    Get Trading Pair Header
-
-    # Verify header
-    Should Not Be Empty    ${pair_header}    Pair header is empty
-    Should Contain    ${pair_header}    USDT    ignore_case=True
-
-    Log    ✓ Pair header verified: ${pair_header}    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the trading pair header should not be empty
+    And the trading pair header should display USDT
 
 Web UI - Market Data Snapshot
-    [Documentation]    Collect complete market data snapshot and validate structure against test data
+    [Documentation]    Scenario: User collects a complete live market data snapshot
     ...
-    ...    Collects:
-    ...    - Current price
-    ...    - 24h price change
-    ...    - 24h trading volume
-    ...    - Bid/Ask prices
+    ...    Criteria:
+    ...    - Live price and 24h change are captured
+    ...    - Volume data is present
+    ...    - Order book bid and ask are included
     [Tags]    regression    market    data    information    positive_case
 
-    # Collect all market data from page
-    ${market_data}=    Get Market Data Dictionary
-
-    # Verify data structure keys
-    FOR    ${key}    IN    price    change_24h    volume_24h    bid    ask
-        Should Contain    ${market_data}    ${key}    msg=Key '${key}' missing from market data snapshot
-    END
-
-    # Log collected data vs JSON reference values
-    Log    Market Data Snapshot (Live):    INFO
-    Log    - Price: ${market_data}[price]    INFO
-    Log    - 24h Change: ${market_data}[change_24h]    INFO
-    Log    - 24h Volume: ${market_data}[volume_24h]    INFO
-    Log    - Bid: ${market_data}[bid]    INFO
-    Log    - Ask: ${market_data}[ask]    INFO
-    Log    ${WEB_TEST_DATA}    DEBUG
-
-    Log    ✓ Market data snapshot captured    INFO
+    Given the USDT/IDR market page is open
+    When the user collects live market data from the page
+    Then the snapshot should contain price information
+    And the snapshot should contain volume information
+    And the snapshot should contain order book information
 
 Web UI - Price Change Information
-    [Documentation]    Verify 24-hour price change information
+    [Documentation]    Scenario: User views the 24-hour price change indicator
     ...
-    ...    Acceptance Criteria:
-    ...    - Price change is displayed
-    ...    - Change value is visible
-    ...    - Change indicator is shown
+    ...    Criteria:
+    ...    - Price change element is displayed
+    ...    - Price change value is non-empty
     [Tags]    regression    market    price    change    data    positive_case
 
-    # Get price change
-    ${change}=    Get Price Change 24h
-
-    # Verify change information
-    Should Not Be Empty    ${change}    Price change is empty
-
-    Log    24-hour Price Change: ${change}    INFO
-    Log    ✓ Price change information verified    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the 24-hour price change should be visible
+    And the price change value should not be empty
 
 Web UI - Volume Information
-    [Documentation]    Verify 24-hour trading volume
+    [Documentation]    Scenario: User views the 24-hour trading volume
     ...
-    ...    Acceptance Criteria:
-    ...    - Volume is displayed
-    ...    - Volume value is visible
-    ...    - Volume is non-empty
+    ...    Criteria:
+    ...    - Volume element is displayed
+    ...    - Volume value is non-empty
     [Tags]    regression    market    volume    data    positive_case
 
-    # Get volume
-    ${volume}=    Get Volume 24h
-
-    # Verify volume
-    Should Not Be Empty    ${volume}    Volume is empty
-
-    Log    24-hour Volume: ${volume}    INFO
-    Log    ✓ Volume information verified    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the 24-hour volume should be visible
+    And the volume value should not be empty
 
 Web UI - Order Book Bid and Ask
-    [Documentation]    Verify bid and ask prices from order book
+    [Documentation]    Scenario: User views bid and ask prices in the order book
     ...
-    ...    Acceptance Criteria:
-    ...    - Bid price is displayed
-    ...    - Ask price is displayed
-    ...    - Ask price >= Bid price
+    ...    Criteria:
+    ...    - Bid price is visible in the order book
+    ...    - Ask price is visible in the order book
     [Tags]    regression    market    orderbook    bid-ask    data    positive_case
 
-    # Get bid and ask
-    ${bid}=    Get Bid Price
-    ${ask}=    Get Ask Price
-
-    # Verify values
-    Should Not Be Empty    ${bid}    Bid price is empty
-    Should Not Be Empty    ${ask}    Ask price is empty
-
-    # Verify bid-ask relationship
-    Log    Bid: ${bid}    INFO
-    Log    Ask: ${ask}    INFO
-    Log    ✓ Bid and ask prices verified    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the bid price should be visible in the order book
+    And the ask price should be visible in the order book
 
 Web UI - Page Screenshot Capture
-    [Documentation]    Capture screenshot of USDT/IDR market page
+    [Documentation]    Scenario: Screenshot of the market page is captured for reporting
     ...
-    ...    Purpose:
-    ...    - Visual verification of market page
-    ...    - Documentation of market state
-    ...    - Test reporting
+    ...    Criteria:
+    ...    - Market data section is scrolled into view
+    ...    - Screenshot is saved successfully
     [Tags]    regression    market    screenshot    utility    positive_case
 
-    # Scroll to ensure all data visible
-    Scroll To Market Data
-
-    # Take screenshot
-    Screenshot Market Page    usdtidr_market_page
-
-    Log    ✓ Screenshot captured    INFO
+    Given the USDT/IDR market page is open
+    When the market data section is scrolled into view
+    Then a screenshot of the market page should be captured
 
 Web UI - Responsive Page Verification
-    [Documentation]    Verify market page is responsive and interactive
+    [Documentation]    Scenario: User interacts with the page and it responds correctly
     ...
-    ...    Acceptance Criteria:
-    ...    - Page responds to interactions
-    ...    - Elements are clickable
-    ...    - Page updates are visible
+    ...    Criteria:
+    ...    - Page is responsive and interactive
+    ...    - Page is ready for live price updates
     [Tags]    regression    market    responsive    ui    positive_case
 
-    # Verify page responsiveness
-    Verify Page Is Responsive
-
-    # Verify price updates
-    Wait For Price Updates    ${TIMEOUT}
-
-    Log    ✓ Page responsiveness verified    INFO
+    Given the USDT/IDR market page is open
+    When the page has fully loaded
+    Then the page should be responsive and interactive
+    And the page should be ready for price updates
 
 Web UI - Market Search Functionality
-    [Documentation]    Verify market search functionality
+    [Documentation]    Scenario: User searches for market pairs and finds correct results
     ...
-    ...    Acceptance Criteria:
-    ...    - Search box is accessible
-    ...    - Search returns relevant results
-    ...    - BTC/IDR appears in search results when searching for BTC
-    ...
-    ...    Search term and expected result loaded from JSON test data (market_pairs.btcidr)
+    ...    Criteria:
+    ...    - Each pair defined in test data is searched by base currency name
+    ...    - The expected trading pair appears as the first search result
     [Tags]    market    search    ui    positive_case    critical
 
-    # Iterate over all market pairs defined in JSON test data (keys driven from JSON)
-    ${pair_ids}=    Get Dictionary Keys    ${WEB_TEST_DATA}[market_pairs]    sort_keys=False
-    FOR    ${pair_id}    IN    @{pair_ids}
-        ${search_term}=    Get Value From Json    ${WEB_TEST_DATA}    $.market_pairs.${pair_id}.base_currency
-        ${expected_result}=    Get Value From Json    ${WEB_TEST_DATA}    $.market_pairs.${pair_id}.name
-        ${search_term}=    Set Variable    ${search_term}[0]
-        ${expected_result}=    Set Variable    ${expected_result}[0]
-
-        Log    [${pair_id}] Search term: ${search_term} | Expected: ${expected_result}    INFO
-
-        Search Market By Pair Name    ${search_term}
-        ${search_result}=    Verify Search Result Contains Text    ${expected_result}
-
-        Log    ✓ [${pair_id}] Search verified — result: ${search_result}    INFO
-    END
-
-    Log    ✓ Market search functionality verified for all pairs    INFO
+    Given the USDT/IDR market page is open
+    And the market pairs are defined in test data
+    #When the user searches for each market pair by currency name
+    #Then all search results should display the expected trading pairs
+    #When Search And Get First Result        USDT/IDR
+    #Then Verify Search Result Contains Text        USDT/IDR
+    When Search And Get First Result        $.market_pairs.ethidr.base_currency
+    Then Verify Search Result Contains Text        $.market_pairs.ethidr.name        

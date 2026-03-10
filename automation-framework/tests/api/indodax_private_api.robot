@@ -1,10 +1,17 @@
 *** Settings ***
-Documentation       Indodax Private API Test Suite - Data-Driven
-...                 Tests private account endpoints
-...                 - Authentication
-...                 - Account Balance
-...                 - Order Management (Buy/Sell)
-...                 - Order History
+Documentation       Indodax Private API Test Suite
+...                 Feature: Authenticated Account and Order Endpoints
+...                 Tests private API endpoints in BDD (Gherkin) style:
+...                 - Authentication (valid and invalid credentials)
+...                 - Account balance
+...                 - Order placement (buy and sell)
+...                 - Order validation (negative cases: negative price, zero amount)
+...                 - Order management (open orders, cancel, history)
+...                 - Data-driven order scenarios
+...
+...                 NOTE: Tests tagged 'skip' require valid INDODAX_API_KEY and
+...                 INDODAX_API_SECRET in .env.${TEST_ENV}. Remove the 'skip' tag
+...                 once valid credentials are configured.
 
 Resource            ../../resources/keywords/api/api_settings.robot
 
@@ -14,325 +21,179 @@ Suite Teardown      Cleanup Private API Environment
 Test Tags           api    indodax    private    authentication
 
 
-*** Variables ***
-${TEST_ENV}     production
-
-
 *** Test Cases ***
 Private API - Authentication - Valid Credentials Should Succeed
-    [Documentation]    Verify authentication with valid credentials
-    ...    NOTE: Tagged 'skip' — requires a live, unexpired INDODAX_API_KEY + INDODAX_API_SECRET
-    ...    in .env.${TEST_ENV}. Remove the 'skip' tag once valid credentials are configured.
+    [Documentation]    Scenario: User authenticates with valid API credentials
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status
-    ...    - Valid API key and secret authenticate successfully
-    ...    - Response contains account data
-    ...    - No 401 Unauthorized errors
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains account data (return field)
+    ...    - Response matches account info JSON schema
     [Tags]    authentication    positive_case    smoke    critical    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Setup signing for this test
-    Setup Private API Signing
-
-    # Arrange
-    ${api_key}=    Set Variable    ${API_KEY}
-    ${api_secret}=    Set Variable    ${API_SECRET}
-
-    # Act
-    Create Indodax Private API Session    ${api_key}    ${api_secret}    ${API_BASE_URL}
-
-    # This would call: IndodaxPrivateService.get_account_info()
-    ${response}=    Get Account Info
-
-    # Assert - Validate HTTP Status Code
-    ${account_info}=    Verify Response Status Code OK    ${response}
-    Should Not Be Empty    ${account_info}
-    Verify Response Contains Key    ${account_info}    return
-
-    # Validate schema
-    Validate Account Info Response Schema    ${account_info}
-
-    Log    ✓ Authentication successful    INFO
+    Given the private API session is initialized with valid credentials
+    When the user requests their account information
+    Then the response should be 200 OK
+    And the account response should contain account data
+    And the account info should match the expected schema
 
 Private API - Authentication - Invalid API Key Should Fail
-    [Documentation]    Verify authentication fails with invalid API key
+    [Documentation]    Scenario: User attempts to authenticate with invalid API credentials
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status (API returns error in JSON)
-    ...    - Invalid API key returns error (401 or invalid signature)
-    ...    - Response contains authentication error message
-    ...    - No sensitive data exposed in error
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200 (Indodax encodes rejections in JSON body)
+    ...    - Response is a valid dictionary
     [Tags]    authentication    negative_case    security
     [Setup]    Setup Dummy Signer For Testing
 
-    # Arrange
-    ${invalid_key}=    Set Variable    invalid_api_key_xyz123456
-    ${invalid_secret}=    Set Variable    invalid_secret_xyz123456
-
-    # Act & Assert - Test with invalid credentials (should get auth error, not signature error)
-    Create Indodax Private API Session    ${invalid_key}    ${invalid_secret}    ${API_BASE_URL}
-
-    ${response}=    Get Account Info
-
-    # Should validate status code and check response is a dictionary
-    ${response_body}=    Verify Response Status Code OK    ${response}
-    ${is_dict}=    Run Keyword And Return Status    Should Be True    isinstance(${response_body}, dict)
-    Should Be True    ${is_dict}    Response should be a dictionary
-    Log    ✓ Invalid credentials properly rejected    INFO
+    Given the private API session is initialized with invalid credentials
+    When the user requests their account information
+    Then the response should be 200 OK
+    And the response should be a valid dictionary
 
 Private API - Get Account Balance
-    [Documentation]    Retrieve account balance for all assets
+    [Documentation]    Scenario: User retrieves account balance for all assets
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status
-    ...    - Successfully retrieve balance
-    ...    - Response contains balance for each asset
-    ...    - Balance values are non-negative numbers
-    ...    - Includes time information
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains return and server_time fields
+    ...    - Balance data is non-empty
     [Tags]    account    balance    positive_case    smoke    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Arrange
-    Create Indodax Private API Session    ${API_KEY}    ${API_SECRET}    ${API_BASE_URL}
-
-    # Act
-    ${response}=    Get Account Balance
-
-    # Assert - Validate HTTP Status Code
-    ${balance_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${balance_response}    return
-    Verify Response Contains Key    ${balance_response}    server_time
-
-    ${balance_data}=    Get From Dictionary    ${balance_response}    return
-    Should Not Be Empty    ${balance_data}
-
-    Log    ✓ Account balance retrieved successfully    INFO
+    Given the private API session is initialized with valid credentials
+    When the user requests their account balance
+    Then the response should be 200 OK
+    And the balance response should contain balance data
 
 Private API - Place Buy Order - Valid Parameters
-    [Documentation]    Test placing buy order with valid parameters
+    [Documentation]    Scenario: User places a valid buy order
     ...
-    ...    Test Data Variations:
-    ...    - Standard buy order (1000 IDR equivalent)
-    ...    - High amount order (10000 IDR equivalent)
-    ...    - Low amount order (minimum allowed)
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Order response confirms a buy order was created
     [Tags]    order    buy    positive_case    data_driven    critical    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Arrange
-    Create Indodax Private API Session    ${API_KEY}    ${API_SECRET}    ${API_BASE_URL}
-
-    ${pair}=    Get Private API Buy Order Pair    buy_order_btc_standard
-    ${test_data}=    Get Private API Buy Order Test Data    buy_order_btc_standard
-    ${price}=    Get From Dictionary    ${test_data}    price
-    ${amount}=    Get From Dictionary    ${test_data}    amount
-    ${order_type}=    Get From Dictionary    ${test_data}    type
-
-    # Act
-    ${response}=    Place Buy Order    ${pair}    ${price}    ${amount}
-
-    # Assert - Validate HTTP Status Code
-    ${order_response}=    Verify Response Status Code OK    ${response}
-    Verify Order Response    ${order_response}    ${order_type}    ${pair}    ${price}    ${amount}
-    ${order_id}=    Verify Order Is Created    ${order_response}
-
-    Log Request Details    POST    /tapi/trade    pair=${pair} type=${order_type} price=${price} amount=${amount}
-    Log Response Details    ${order_response}    ${True}
+    Given the private API session is initialized with valid credentials
+    And the "buy_order_btc_standard" buy order data is loaded from test data
+    When the user places a buy order for the resolved pair
+    Then the response should be 200 OK
+    And the order should be confirmed as a "buy" order for the resolved pair
 
 Private API - Place Sell Order - Valid Parameters
-    [Documentation]    Test placing sell order with valid parameters
+    [Documentation]    Scenario: User places a valid sell order
+    ...
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Order response confirms a sell order was created
     [Tags]    order    sell    positive_case    data_driven    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Arrange
-    Create Indodax Private API Session    ${API_KEY}    ${API_SECRET}    ${API_BASE_URL}
-
-    ${pair}=    Get Private API Sell Order Pair    sell_order_eth_standard
-    ${test_data}=    Get Private API Sell Order Test Data    sell_order_eth_standard
-    ${price}=    Get From Dictionary    ${test_data}    price
-    ${amount}=    Get From Dictionary    ${test_data}    amount
-    ${order_type}=    Get From Dictionary    ${test_data}    type
-
-    # Act
-    ${response}=    Place Sell Order    ${pair}    ${price}    ${amount}
-
-    # Assert - Validate HTTP Status Code
-    ${order_response}=    Verify Response Status Code OK    ${response}
-    Verify Order Response    ${order_response}    ${order_type}    ${pair}    ${price}    ${amount}
-    ${order_id}=    Verify Order Is Created    ${order_response}
+    Given the private API session is initialized with valid credentials
+    And the "sell_order_eth_standard" sell order data is loaded from test data
+    When the user places a sell order for the resolved pair
+    Then the response should be 200 OK
+    And the order should be confirmed as a "sell" order for the resolved pair
 
 Private API - Place Order - Negative Price Should Fail
-    [Documentation]    Verify order with negative price is rejected
+    [Documentation]    Scenario: User attempts to place an order with a negative price
     ...
-    ...    Test Data: Negative price (-500000000)
-    ...    Expected: API validation error (HTTP 200 with error in response, doesn't need valid credentials for validation)
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200 (validation error encoded in JSON body)
+    ...    - Response is non-empty
     [Tags]    order    validation    negative_case    data_driven
     [Setup]    Setup Dummy Signer For Testing
 
-    # Arrange - Load test data from centralized JSON
-    ${pair}=    Get Private API Validation Pair    negative_price
-    ${test_data}=    Get Private API Order Validation Test Data    negative_price
-
-    Create Indodax Private API Session    dummy_key    dummy_secret    ${API_BASE_URL}
-
-    ${price}=    Get From Dictionary    ${test_data}    price
-    ${amount}=    Get From Dictionary    ${test_data}    amount
-
-    # Act
-    ${response}=    Place Buy Order    ${pair}    ${price}    ${amount}
-
-    # Assert - Validate HTTP Status Code and response exists
-    ${order_response}=    Verify Response Status Code OK    ${response}
-    Should Not Be Empty    ${order_response}    Order response should not be empty
-    Log    ✓ Negative price properly validated    INFO
+    Given the private API session is initialized with dummy credentials
+    And the "negative_price" order validation data is loaded
+    When the user places a buy order for the resolved pair
+    Then the response should be 200 OK
+    And the validation error response should not be empty
 
 Private API - Place Order - Zero Amount Should Fail
-    [Documentation]    Verify order with zero amount is rejected
+    [Documentation]    Scenario: User attempts to place an order with zero amount
     ...
-    ...    Test Data: Zero amount (0)
-    ...    Expected: API validation error (HTTP 200 with error in response, doesn't need valid credentials for validation)
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200 (validation error encoded in JSON body)
+    ...    - Response is non-empty
     [Tags]    order    validation    negative_case    data_driven
     [Setup]    Setup Dummy Signer For Testing
 
-    # Arrange - Load test data from centralized JSON
-    ${pair}=    Get Private API Validation Pair    zero_amount
-    ${test_data}=    Get Private API Order Validation Test Data    zero_amount
-
-    Create Indodax Private API Session    dummy_key    dummy_secret    ${API_BASE_URL}
-
-    ${price}=    Get From Dictionary    ${test_data}    price
-    ${amount}=    Get From Dictionary    ${test_data}    amount
-
-    # Act
-    ${response}=    Place Buy Order    ${pair}    ${price}    ${amount}
-
-    # Assert - Validate HTTP Status Code and response exists
-    ${order_response}=    Verify Response Status Code OK    ${response}
-    Should Not Be Empty    ${order_response}    Order response should not be empty
-    Log    ✓ Zero amount properly validated    INFO
+    Given the private API session is initialized with dummy credentials
+    And the "zero_amount" order validation data is loaded
+    When the user places a buy order for the resolved pair
+    Then the response should be 200 OK
+    And the validation error response should not be empty
 
 Private API - Get Open Orders
-    [Documentation]    Retrieve list of open orders
+    [Documentation]    Scenario: User retrieves all open orders
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status
-    ...    - Successfully retrieve open orders
-    ...    - Response contains order list (may be empty)
-    ...    - Each order has required fields (order_id, pair, type, price, amount)
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains return and server_time fields
     [Tags]    order    list    positive_case    smoke    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Arrange
-    Create Indodax Private API Session    ${API_KEY}    ${API_SECRET}    ${API_BASE_URL}
-
-    # Act
-    ${response}=    Get Open Orders
-
-    # Assert - Validate HTTP Status Code
-    ${orders_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${orders_response}    return
-    Verify Response Contains Key    ${orders_response}    server_time
-
-    Log    ✓ Open orders list retrieved successfully    INFO
+    Given the private API session is initialized with valid credentials
+    When the user requests all open orders
+    Then the response should be 200 OK
+    And the open orders response should contain order list data
 
 Private API - Get Open Orders For Specific Pair
-    [Documentation]    Retrieve open orders for specific trading pair
+    [Documentation]    Scenario: User retrieves open orders filtered by a specific trading pair
     ...
-    ...    Test Data: btc_idr
-    ...    Expected: Orders filtered by pair, HTTP 200 response
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains return field (filtered by pair)
     [Tags]    order    list    positive_case    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Arrange
-    Create Indodax Private API Session    ${API_KEY}    ${API_SECRET}    ${API_BASE_URL}
-
-    ${pair}=    Get Private API Management Pair    get_open_orders_btc
-
-    # Act
-    ${response}=    Get Open Orders    ${pair}
-
-    # Assert - Validate HTTP Status Code
-    ${orders_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${orders_response}    return
-
-    Log    ✓ Open orders for ${pair} retrieved successfully    INFO
+    Given the private API session is initialized with valid credentials
+    And the test uses the "get_open_orders_btc" management pair
+    When the user requests open orders for the resolved pair
+    Then the response should be 200 OK
+    And the open orders response should contain order list data
 
 Private API - Cancel Order - Valid Order ID
-    [Documentation]    Test cancelling order
+    [Documentation]    Scenario: User cancels an existing order by order ID
     ...
-    ...    Prerequisite: Tests the API endpoint structure
-    ...    Expected: API responds with HTTP 200 (auth error expected with dummy credentials)
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200 (auth error expected with dummy credentials)
+    ...    - Response is non-empty
     [Tags]    order    cancel    positive_case
     [Setup]    Setup Dummy Signer For Testing
 
-    # Arrange - Load test data from centralized JSON
-    ${test_data}=    Get Private API Order Management Data    cancel_order
-    ${pair}=    Get Private API Management Pair    cancel_order
-
-    Create Indodax Private API Session    dummy_key    dummy_secret    ${API_BASE_URL}
-
-    ${order_id}=    Get From Dictionary    ${test_data}    order_id
-
-    # Act
-    ${response}=    Cancel Order    ${order_id}    ${pair}
-
-    # Assert - Validate HTTP Status Code and response exists
-    ${cancel_response}=    Verify Response Status Code OK    ${response}
-    Should Not Be Empty    ${cancel_response}    Cancel order response should not be empty
-
-    Log Request Details    POST    /tapi/cancelOrder    order_id=${order_id} pair=${pair}
-    Log Response Details    ${cancel_response}    ${True}
-    Log    ✓ Cancel order endpoint functional    INFO
+    Given the private API session is initialized with dummy credentials
+    And the "cancel_order" management data is loaded
+    When the user cancels the order
+    Then the response should be 200 OK
+    And the cancel response should not be empty
 
 Private API - Get Order History
-    [Documentation]    Retrieve order history
+    [Documentation]    Scenario: User retrieves completed order history
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status
-    ...    - Successfully retrieve order history
-    ...    - Response contains completed orders
-    ...    - Orders include all transaction details
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains return field with order history
     [Tags]    order    history    positive_case    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Arrange
-    Create Indodax Private API Session    ${API_KEY}    ${API_SECRET}    ${API_BASE_URL}
-
-    # Act
-    ${response}=    Get Order History
-
-    # Assert - Validate HTTP Status Code
-    ${history_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${history_response}    return
-
-    Log    ✓ Order history retrieved successfully    INFO
+    Given the private API session is initialized with valid credentials
+    When the user requests order history
+    Then the response should be 200 OK
+    And the order history response should contain history data
 
 Private API - Data-Driven Order Testing
-    [Documentation]    Data-driven test for multiple order scenarios
+    [Documentation]    Scenario: User executes multiple order scenarios from test data
     ...
-    ...    Test Data:
-    ...    - Valid buy orders
-    ...    - Valid sell orders
-    ...    - Different trading pairs
+    ...    Criteria:
+    ...    - All configured buy and sell order scenarios execute without errors
     [Tags]    order    data_driven    parameterized    skip
     [Setup]    Skip If No Valid Credentials
 
-    # Load data-driven scenarios from JSON
-    ${scenarios}=    Get Private API Data Driven Scenarios
+    Given the private API session is initialized with valid credentials
+    When the user runs data-driven order tests for all configured scenarios
+    Then all data-driven order tests should complete successfully
 
-    FOR    ${scenario}    IN    @{scenarios}
-        ${pair_id}=    Get From Dictionary    ${scenario}    pair_id
-        ${pair}=    Get Trading Pair Id    ${pair_id}
-        ${type}=    Get From Dictionary    ${scenario}    type
-        ${price}=    Get From Dictionary    ${scenario}    price
-        ${amount}=    Get From Dictionary    ${scenario}    amount
-
-        Log    Testing ${type} order for ${pair}    INFO
-
-        # Place order based on type
-        IF    '${type}' == 'buy'
-            Place Buy Order    ${pair}    ${price}    ${amount}
-        ELSE
-            Place Sell Order    ${pair}    ${price}    ${amount}
-        END
-    END

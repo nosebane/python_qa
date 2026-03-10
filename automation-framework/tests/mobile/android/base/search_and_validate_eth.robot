@@ -1,13 +1,11 @@
 *** Settings ***
-Documentation       Search for ETH pair and validate ETH/IDR page
-...                 Test flow:
-...                 - Click Home button
-...                 - Skip onboarding
-...                 - Click Market menu
-...                 - Skip onboarding (if appears)
+Documentation       Search for ETH pair and validate ETH/IDR trading page
+...                 Feature: Market Search and Navigation — Android
+...                 Tests search flow in BDD (Gherkin) style:
+...                 - Navigate to Market page
 ...                 - Search for 'ETH'
 ...                 - Click "ETH/IDR" on search result
-...                 - Validate ETH page shows up
+...                 - Validate ETH/IDR trading page is displayed
 ...
 ...                 Run with different environments:
 ...                 robot -v TEST_ENV:dev tests/mobile/android/base/search_and_validate_eth.robot
@@ -32,35 +30,18 @@ Test Tags           mobile    eth    search    positive_case    critical    regr
 
 *** Test Cases ***
 Mobile - Search ETH From Home
-    [Documentation]    Search for ETH pair from Home page
+    [Documentation]    Scenario: User searches for ETH from the Market page and opens the trading pair
     ...
-    ...    Acceptance Criteria:
-    ...    - Search available
-    ...    - ETH/IDR pair found
-    ...    - Trading page displays
+    ...    Criteria:
+    ...    - Market page is reachable and search is available
+    ...    - ETH/IDR pair appears in search results
+    ...    - ETH/IDR trading page loads and displays correctly
     [Tags]    search    navigation    positive_case
 
-    # Navigate to Market page
-    Navigate To Market
-
-    Capture Page Screenshot    filename=${SCREENSHOT_ONBOARDING}
-
-    # Wait for search functionality to be available
-    Wait Until Page Contains Element    ${SEARCH_CONTAINER}    timeout=10s
-    Capture Page Screenshot    filename=${SCREENSHOT_MARKET_CLICK}
-    Search For Cryptocurrency    ${SEARCH_TERM}
-    Log    ✓ Search for ${SEARCH_TERM} completed    INFO
-    Wait Until Page Contains    ${EXPECTED_PAIR}    timeout=${SEARCH_RESULT_TIMEOUT}
-    Capture Page Screenshot    filename=${SCREENSHOT_SEARCH_RESULTS}
-
-    # Step 5: Click ETH result and validate trading page
-    Click ETH IDR Result
-    Log    ✓ ${EXPECTED_PAIR} result clicked    INFO
-    Wait For ETH Page Load
-    Capture Page Screenshot    filename=${SCREENSHOT_TRADING_PAGE}
-
-    # Step 6: Validate ETH trading page
-    Wait For ETH Page Load
-    Validate ETH Page Is Displayed
-
-    Log    ✓ ${SEARCH_TERM} search from Home completed successfully    INFO
+    Given the app is on the market page
+    And the search functionality is available
+    When the user searches for the configured cryptocurrency
+    Then the expected pair should appear in the search results
+    When the user selects the ETH/IDR result
+    Then the ETH/IDR trading page should be fully loaded
+    And the ETH/IDR trading page should display correctly

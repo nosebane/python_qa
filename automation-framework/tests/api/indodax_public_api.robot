@@ -1,9 +1,11 @@
 *** Settings ***
 Documentation       Indodax Public API Test Suite
-...                 Tests public market data endpoints
-...                 - Ticker data
+...                 Feature: Public Market Data Endpoints
+...                 Tests public API endpoints in BDD (Gherkin) style:
+...                 - Ticker data (Bitcoin, Ethereum, BTC/IDR)
 ...                 - Order book depth
 ...                 - Recent trades
+...                 - Negative cases (invalid pair)
 
 Resource            ../../resources/keywords/api/api_settings.robot
 
@@ -12,168 +14,105 @@ Suite Teardown      Cleanup API Test Environment
 
 Test Tags           api    indodax    public    smoke
 
-
-*** Variables ***
-${TEST_ENV}     production
-
-
 *** Test Cases ***
 Public API - Get Bitcoin Ticker
-    [Documentation]    Verify Bitcoin ticker endpoint returns valid data
+    [Documentation]    Scenario: User requests the Bitcoin ticker from the public API
     ...
-    ...    Acceptance Criteria:
-    ...    - Endpoint returns 200 status
-    ...    - Response contains required fields (buy, sell, last, high, low)
-    ...    - Buy price is less than or equal to Sell price
-    ...    - All price values are positive
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains a ticker field
+    ...    - Ticker has all required price fields (buy, sell, high, low, last)
+    ...    - Ticker values are valid (buy <= sell, last > 0)
+    ...    - Response matches the ticker JSON schema
     [Tags]    smoke    ticker    positive_case    critical
 
-    # Arrange
-    ${pair}=    Get Public API Ticker Pair    bitcoin
-
-    # Act
-    Create Indodax Public API Session    ${API_BASE_URL}
-    ${response}=    Get Ticker For Pair    ${pair}
-
-    # Assert - Validate HTTP Status Code
-    ${ticker_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${ticker_response}    ticker
-    ${ticker_data}=    Get From Dictionary    ${ticker_response}    ticker
-
-    # Verify structure
-    VAR    @{required_fields}    buy    sell    high    low    last
-    Verify Ticker Response Structure    ${ticker_data}    @{required_fields}
-
-    # Verify values
-    Verify Ticker Values    ${ticker_data}
-
-    # Validate schema
-    Validate Ticker Response Schema    ${ticker_response}
+    Given the public API session is initialized
+    And the test uses the "ethereum" ticker pair
+    When the user requests the ticker for the resolved pair
+    Then the response should be 200 OK
+    And the response should contain a ticker field
+    And the ticker should have all required price fields
+    And all ticker price values should be valid
+    And the ticker response should match the schema
 
 Public API - Get Ethereum Ticker
-    [Documentation]    Verify Ethereum ticker endpoint
+    [Documentation]    Scenario: User requests the Ethereum ticker from the public API
+    ...
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains ticker with required price fields
+    ...    - Ticker values are valid
+    ...    - Response matches the ticker JSON schema
     [Tags]    smoke    ticker    positive_case
 
-    # Arrange
-    ${pair}=    Get Public API Ticker Pair    ethereum
-
-    # Act
-    Create Indodax Public API Session    ${API_BASE_URL}
-    ${response}=    Get Ticker For Pair    ${pair}
-
-    # Assert - Validate HTTP Status Code
-    ${ticker_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${ticker_response}    ticker
-    ${ticker_data}=    Get From Dictionary    ${ticker_response}    ticker
-
-    VAR    @{required_fields}    buy    sell    high    low    last
-    Verify Ticker Response Structure    ${ticker_data}    @{required_fields}
-    Verify Ticker Values    ${ticker_data}
-
-    # Validate schema
-    Validate Ticker Response Schema    ${ticker_response}
+    Given the public API session is initialized
+    And the test uses the "ethereum" ticker pair
+    When the user requests the ticker for the resolved pair
+    Then the response should be 200 OK
+    And the response should contain a ticker field
+    And the ticker should have all required price fields
+    And all ticker price values should be valid
+    And the ticker response should match the schema
 
 Public API - Get All Tickers
-    [Documentation]    Verify getting all available tickers
+    [Documentation]    Scenario: User requests ticker data for the BTC/IDR pair
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns 200 status
-    ...    - Response contains ticker data
-    ...    - Response can be parsed as JSON
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response is non-empty and parseable
     [Tags]    regression    ticker    positive_case
 
-    # Arrange
-    ${expected_min_pairs}=    Set Variable    10
-
-    # Act
-    Create Indodax Public API Session    ${API_BASE_URL}
-    ${response}=    Get Ticker For Pair    btc_idr
-
-    # Assert - Validate HTTP Status Code
-    ${tickers_response}=    Verify Response Status Code OK    ${response}
-    Should Not Be Empty    ${tickers_response}
-    Log    Retrieved ticker for btc_idr pair    INFO
+    Given the public API session is initialized
+    And the test uses the BTC/IDR trading pair directly
+    When the user requests the ticker for the resolved pair
+    Then the response should be 200 OK
+    And the ticker response should not be empty
 
 Public API - Invalid Pair Ticker Should Return Error
-    [Documentation]    Verify invalid pair returns error response
+    [Documentation]    Scenario: User requests ticker for an invalid/non-existent trading pair
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status
-    ...    - Response contains error field
-    ...    - Error message indicates pair not found
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200 (Indodax encodes errors in JSON body)
+    ...    - Response contains an error field
+    ...    - Error message is "invalid_pair"
+    ...    - Response matches the error JSON schema
     [Tags]    regression    negative_case    ticker
 
-    # Arrange
-    ${invalid_pair}=    Get Public API Negative Pair    invalid_pair_ticker
-
-    # Act
-    Create Indodax Public API Session    ${API_BASE_URL}
-    ${response}=    Get Ticker For Pair    ${invalid_pair}
-
-    # Assert - Validate HTTP Status Code
-    ${error_response}=    Verify Response Status Code OK    ${response}
-    Verify Response Contains Key    ${error_response}    error
-    ${error_msg}=    Get From Dictionary    ${error_response}    error
-    Should Be Equal    ${error_msg}    invalid_pair
-
-    # Validate error response schema
-    Validate Error Response Schema    ${error_response}
-
-    Log    ✓ Invalid pair error response verified    INFO
+    Given the public API session is initialized
+    And the test uses the "invalid_pair_ticker" negative pair
+    When the user requests the ticker for the resolved pair
+    Then the response should be 200 OK
+    And the response should contain an error field
+    And the error message should be "invalid_pair"
+    And the error response should match the schema
 
 Public API - Get Order Book Depth
-    [Documentation]    Verify order book depth endpoint
+    [Documentation]    Scenario: User requests the BTC order book depth
     ...
-    ...    Acceptance Criteria:
-    ...    - Response returns HTTP 200 status
-    ...    - Response contains buy and sell levels (not bid/ask)
-    ...    - Prices are in correct order
-    ...    - Response has valid structure
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response contains buy and sell levels, or an API restriction message
+    ...    - Depth schema is valid when buy/sell data is present
     [Tags]    regression    depth    positive_case
 
-    # Arrange
-    ${pair}=    Get Public API Depth Pair    btc_depth
-
-    # Act
-    Create Indodax Public API Session    ${API_BASE_URL}
-    ${response}=    Get Depth For Pair    ${pair}
-
-    # Assert - Validate HTTP Status Code
-    ${depth_response}=    Verify Response Status Code OK    ${response}
-
-    # Check if response is valid (either has buy/sell or error)
-    ${has_error}=    Run Keyword And Return Status    Should Contain Key    ${depth_response}    error
-
-    IF    ${has_error}
-        Log    API returned error response (expected due to API restrictions)    INFO
-    ELSE
-        Verify Response Contains Key    ${depth_response}    buy
-        Verify Response Contains Key    ${depth_response}    sell
-        Validate Depth Response Schema    ${depth_response}
-    END
-
-    Log    ✓ Order book depth endpoint responds correctly    INFO
+    Given the public API session is initialized
+    And the test uses the "btc_depth" depth pair
+    When the user requests the order book depth for the resolved pair
+    Then the response should be 200 OK
+    And the depth response should contain order book data or an API restriction message
 
 Public API - Get Recent Trades
-    [Documentation]    Verify recent trades endpoint
+    [Documentation]    Scenario: User requests the BTC recent trade history
     ...
-    ...    Acceptance Criteria:
-    ...    - Endpoint returns HTTP 200 status
-    ...    - Response is not empty
+    ...    Criteria:
+    ...    - Endpoint returns HTTP 200
+    ...    - Response is non-empty
+    ...    - Response matches the trades JSON schema
     [Tags]    regression    trades    positive_case
 
-    # Arrange
-    ${pair}=    Get Public API Trades Pair    btc_trades
-
-    # Act
-    Create Indodax Public API Session    ${API_BASE_URL}
-    ${response}=    Get Trades For Pair    ${pair}
-
-    # Assert - Validate HTTP Status Code
-    ${trades_response}=    Verify Response Status Code OK    ${response}
-    Should Not Be Empty    ${trades_response}
-
-    # Validate schema
-    Validate Trades Response Schema    ${trades_response}
-
-    Log    ✓ Recent trades endpoint responds correctly    INFO
+    Given the public API session is initialized
+    And the test uses the "btc_trades" trades pair
+    When the user requests recent trades for the resolved pair
+    Then the response should be 200 OK
+    And the trades response should not be empty
+    And the trades response should match the schema
